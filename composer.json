@@ -1,5 +1,5 @@
 {
-    "name":"kdyby/curl-extension",
+    "name":"kdyby/curl",
     "type":"library",
     "description":"Curl wrapper for Nette Framework",
     "keywords":["nette", "curl", "http"],
@@ -13,22 +13,18 @@
     ],
     "support":{
         "email":"filip@prochazka.su",
-        "issues":"https://github.com/kdyby/framework/issues"
+        "issues":"https://github.com/kdyby/curl/issues"
     },
     "require":{
         "ext-curl":"*",
         "nette/nette":"*"
     },
-    "conflict":{
-        "kdyby/framework":"self.version"
-    },
     "autoload":{
         "psr-0":{
-            "Kdyby\\Extension\\Curl":""
+            "Kdyby\\Curl":"src/"
         },
         "classmap":[
-            "Kdyby/Extension/Curl/exceptions.php"
+            "src/Kdyby/Curl/exceptions.php"
         ]
-    },
-    "target-dir":"Kdyby/Extension/Curl"
+    }
 }
