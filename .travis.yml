@@ -4,13 +4,7 @@ php:
 	- 5.3.3
 	- 5.4
 
-env:
-  - DB=sqlite
-
-services:
-  - redis-server
-
 before_script:
-  - composer install --no-interaction --quiet
+  - composer install --no-interaction --quiet --dev
 
-script: php tests/lint.php src/Kdyby/ tests/KdybyTests/ && VERBOSE=true ./tests/run-tests.sh -s tests/
+script: php tests/lint.php src/Kdyby/ tests/Kdyby/ && VERBOSE=true ./tests/run-tests.sh -s tests/
