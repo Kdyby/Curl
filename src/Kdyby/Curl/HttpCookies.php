@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the file license.md that was distributed with this source code.
  */
 
-namespace Kdyby\Extension\Curl;
+namespace Kdyby\Curl;
 
 use Kdyby;
 use Nette;
@@ -48,7 +48,7 @@ class HttpCookies extends Nette\ArrayHash
 	 */
 	public function compile()
 	{
-		$cookies = self::flatMapAssoc($this, function ($value, $keys) {
+		$cookies = Helpers::flatMapAssoc($this, function ($value, $keys) {
 			$name = implode('][', array_map('urlencode', $keys));
 			$name = count($keys) > 1 ? (substr_replace($name, '', strpos($name, ']'), 1) . ']') : $name;
 			return $name . '=' . urlencode($value);
@@ -123,33 +123,6 @@ class HttpCookies extends Nette\ArrayHash
 		}
 
 		return $cookie;
-	}
-
-
-
-	/**
-	 * @param array|\Traversable $array
-	 * @param callable $callback
-	 * @return array
-	 */
-	private static function flatMapAssoc($array, $callback)
-	{
-		$callback = callback($callback);
-		$result = array();
-		$walker = function ($array, $keys = array()) use (&$walker, &$result, $callback) {
-			foreach ($array as $key => $value) {
-				$currentKeys = $keys + array(count($keys) => $key);
-				if (is_array($value)) {
-					$walker($value, $currentKeys);
-					continue;
-				}
-				$result[] = $callback($value, $currentKeys);
-			}
-
-			return $result;
-		};
-
-		return $walker($array);
 	}
 
 }

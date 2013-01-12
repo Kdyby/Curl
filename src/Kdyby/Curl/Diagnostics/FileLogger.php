@@ -8,10 +8,10 @@
  * For the full copyright and license information, please view the file license.md that was distributed with this source code.
  */
 
-namespace Kdyby\Extension\Curl\Diagnostics;
+namespace Kdyby\Curl\Diagnostics;
 
 use Kdyby;
-use Kdyby\Extension\Curl;
+use Kdyby\Curl;
 use Nette;
 use Nette\PhpGenerator as Code;
 
@@ -52,7 +52,7 @@ class FileLogger extends Nette\Object implements Curl\IRequestLogger
 
 
 	/**
-	 * @param \Kdyby\Extension\Curl\Request $request
+	 * @param \Kdyby\Curl\Request $request
 	 */
 	public function request(Curl\Request $request)
 	{
@@ -64,7 +64,7 @@ class FileLogger extends Nette\Object implements Curl\IRequestLogger
 		}
 
 		$content = '> ' . implode("\n> ", $content) . "\n";
-		Kdyby\Tools\Arrays::flatMapAssoc($request->post + $request->files, function ($val, $keys) use (&$content) {
+		Curl\Helpers::flatMapAssoc($request->post + $request->files, function ($val, $keys) use (&$content) {
 			$content .= implode("][", $keys) . ": " . Code\Helpers::dump($val) . "\n";
 		});
 
@@ -76,7 +76,7 @@ class FileLogger extends Nette\Object implements Curl\IRequestLogger
 
 
 	/**
-	 * @param \Kdyby\Extension\Curl\Response $response
+	 * @param \Kdyby\Curl\Response $response
 	 * @param string $id
 	 */
 	public function response(Curl\Response $response, $id)

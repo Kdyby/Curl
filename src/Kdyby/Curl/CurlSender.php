@@ -8,11 +8,10 @@
  * For the full copyright and license information, please view the file license.md that was distributed with this source code.
  */
 
-namespace Kdyby\Extension\Curl;
+namespace Kdyby\Curl;
 
 use Kdyby;
 use Nette;
-use Nette\Http\UrlScript as Url;
 use Nette\Utils\Strings;
 
 
@@ -369,7 +368,7 @@ class CurlSender extends RequestOptions
 		}
 
 		$previous = $last = NULL;
-		$url = $curl->getUrl();
+		/** @var Response $last */
 
 		$parts = Strings::split($curl->responseHeaders, '~(HTTP/\d\.\d\s\d+\s.*)~m', PREG_SPLIT_NO_EMPTY);
 		while ($rawHeaders = array_shift($parts)) {
@@ -387,7 +386,7 @@ class CurlSender extends RequestOptions
 			}
 
 			if ($headers = CurlWrapper::parseHeaders($rawHeaders)) {
-				$previous = new Response(new Url($url), $headers);
+				$previous = new Response($curl, $headers);
 				if ($last !== NULL) {
 					$previous->setPrevious($last);
 				}

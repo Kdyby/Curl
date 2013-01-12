@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the file license.md that was distributed with this source code.
  */
 
-namespace Kdyby\Extension\Curl;
+namespace Kdyby\Curl;
 
 use Kdyby;
 use Nette;
@@ -20,8 +20,8 @@ use Nette\Http\UrlScript as Url;
 /**
  * @author Filip Procházka <filip@prochazka.su>
  *
- * @method \Kdyby\Extension\Curl\Request setUrl(string $url)
- * @method \Kdyby\Extension\Curl\Request setMethod(string $url)
+ * @method \Kdyby\Curl\Request setUrl(string $url)
+ * @method \Kdyby\Curl\Request setMethod(string $url)
  */
 class Request extends RequestOptions
 {

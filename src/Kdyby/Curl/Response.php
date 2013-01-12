@@ -8,11 +8,10 @@
  * For the full copyright and license information, please view the file license.md that was distributed with this source code.
  */
 
-namespace Kdyby\Extension\Curl;
+namespace Kdyby\Curl;
 
 use Kdyby;
 use Nette;
-use Nette\Http\UrlScript as Url;
 use Nette\Utils\Strings;
 
 
@@ -21,7 +20,7 @@ use Nette\Utils\Strings;
  * @author Filip Procházka <filip@prochazka.su>
  *
  * @property-read array $headers
- * @property-read \Kdyby\Extension\Curl\Response|NULL $previous
+ * @property-read \Kdyby\Curl\Response|NULL $previous
  * @property-read string $response
  * @property-read array $cookies
  * @property-read array $info

@@ -8,10 +8,10 @@
  * For the full copyright and license information, please view the file license.md that was distributed with this source code.
  */
 
-namespace Kdyby\Extension\Curl\Diagnostics;
+namespace Kdyby\Curl\Diagnostics;
 
 use Kdyby;
-use Kdyby\Extension\Curl;
+use Kdyby\Curl;
 use Nette;
 
 
@@ -54,13 +54,13 @@ class Panel extends Nette\Object
 
 
 	/**
-	 * @param \Kdyby\Extension\Curl\Response $response
+	 * @param \Kdyby\Curl\Response $response
 	 *
 	 * @return string
 	 */
 	public static function allResponses($response)
 	{
-		if (!$response instanceof Kdyby\Extension\Curl\Response) {
+		if (!$response instanceof Curl\Response) {
 			return NULL;
 		}
 
@@ -78,7 +78,7 @@ class Panel extends Nette\Object
 
 
 	/**
-	 * @return \Kdyby\Extension\Curl\Diagnostics\Panel
+	 * @return \Kdyby\Curl\Diagnostics\Panel
 	 */
 	public static function register()
 	{

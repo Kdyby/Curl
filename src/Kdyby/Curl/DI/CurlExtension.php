@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the file license.md that was distributed with this source code.
  */
 
-namespace Kdyby\Extension\Curl\DI;
+namespace Kdyby\Curl\DI;
 
 use Kdyby;
 use Nette;
@@ -25,11 +25,11 @@ class CurlExtension extends Nette\Config\CompilerExtension
 	{
 		$builder = $this->getContainerBuilder();
 		$builder->addDefinition($this->prefix('curl'))
-			->setClass('Kdyby\Extension\Curl\CurlSender');
+			->setClass('Kdyby\Curl\CurlSender');
 
 		if (!$builder->parameters['productionMode']) {
 			$builder->addDefinition($this->prefix('curl.panel'))
-				->setFactory('Kdyby\Extension\Curl\Diagnostics\Panel::register')
+				->setFactory('Kdyby\Curl\Diagnostics\Panel::register')
 				->addTag('run', TRUE);
 		}
 	}

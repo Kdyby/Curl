@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the file license.md that was distributed with this source code.
  */
 
-namespace Kdyby\Extension\Curl;
+namespace Kdyby\Curl;
 
 
 
@@ -99,12 +99,12 @@ class CurlException extends \RuntimeException implements Exception
 {
 
 	/**
-	 * @var \Kdyby\Extension\Curl\Request
+	 * @var \Kdyby\Curl\Request
 	 */
 	private $request;
 
 	/**
-	 * @var \Kdyby\Extension\Curl\Response
+	 * @var \Kdyby\Curl\Response
 	 */
 	private $response;
 
@@ -112,8 +112,8 @@ class CurlException extends \RuntimeException implements Exception
 
 	/**
 	 * @param string $message
-	 * @param \Kdyby\Extension\Curl\Request $request
-	 * @param \Kdyby\Extension\Curl\Response $response
+	 * @param \Kdyby\Curl\Request $request
+	 * @param \Kdyby\Curl\Response $response
 	 */
 	public function __construct($message, Request $request = NULL, Response $response = NULL)
 	{
@@ -127,7 +127,7 @@ class CurlException extends \RuntimeException implements Exception
 
 
 	/**
-	 * @return \Kdyby\Extension\Curl\Request
+	 * @return \Kdyby\Curl\Request
 	 */
 	public function getRequest()
 	{
@@ -137,7 +137,7 @@ class CurlException extends \RuntimeException implements Exception
 
 
 	/**
-	 * @return \Kdyby\Extension\Curl\Response
+	 * @return \Kdyby\Curl\Response
 	 */
 	public function getResponse()
 	{
@@ -162,7 +162,7 @@ class FailedRequestException extends CurlException
 
 
 	/**
-	 * @param \Kdyby\Extension\Curl\CurlWrapper $curl
+	 * @param \Kdyby\Curl\CurlWrapper $curl
 	 */
 	public function __construct(CurlWrapper $curl)
 	{

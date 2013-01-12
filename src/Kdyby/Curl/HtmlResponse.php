@@ -8,8 +8,9 @@
  * For the full copyright and license information, please view the file license.md that was distributed with this source code.
  */
 
-namespace Kdyby\Extension\Curl;
+namespace Kdyby\Curl;
 
+use DOMDocument;
 use Kdyby;
 use Nette;
 use Nette\Utils\Strings;
@@ -26,18 +27,27 @@ class HtmlResponse extends Response
 	const CONTENT_TYPE = '~^(?P<type>[^;]+);[\t ]*charset=(?P<charset>.+)$~i';
 	/**#@- */
 
-	/** @var \Kdyby\Extension\Browser\DomDocument */
+	/** @var DomDocument */
 	private $document;
 
 
 
 	/**
-	 * @return \Kdyby\Extension\Browser\DomDocument
+	 * @return DomDocument
 	 */
 	public function getDocument()
 	{
 		if ($this->document === NULL) {
-			$this->document = Kdyby\Extension\Browser\DomDocument::fromMalformedHtml($this->getResponse());
+			$dom = new DomDocument('1.0', 'UTF-8');
+			$dom->resolveExternals = FALSE;
+			$dom->validateOnParse = FALSE;
+			$dom->preserveWhiteSpace = FALSE;
+			$dom->strictErrorChecking = FALSE;
+			$dom->recover = TRUE;
+
+			@$dom->loadHTML($this->getResponse());
+
+			$this->document = $dom;
 		}
 
 		return $this->document;
