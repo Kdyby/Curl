@@ -11,7 +11,8 @@
 // require class loader
 /** @var \Composer\Autoload\ClassLoader $loader */
 $loader = require_once __DIR__ . '/../../vendor/autoload.php';
-$loader->add('KdybyTests', __DIR__);
 $loader->add('Kdyby', __DIR__ . '/../../src');
+
+define('TMP_DIR', __DIR__ . '/../tmp');
 
 unset($loader); // cleanup
