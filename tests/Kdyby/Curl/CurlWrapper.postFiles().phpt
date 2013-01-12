@@ -24,7 +24,7 @@ function dumpVar($variable)
 	return ob_get_clean();
 }
 
-file_put_contents($tempFile = TMP_DIR . '/curl-test.txt', 'ping');
+file_put_contents($tempFile = TEMP_DIR . '/curl-test.txt', 'ping');
 
 $curl = new Curl\CurlWrapper('http://www.kdyby.org/curl-test/post.php', Curl\Request::POST);
 $curl->setPost($post = array('hi' => 'hello'), array('txt' => $tempFile));
