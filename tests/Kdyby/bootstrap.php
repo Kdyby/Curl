@@ -32,3 +32,11 @@ if (extension_loaded('xdebug')) {
 	xdebug_disable();
 	Tester\CodeCoverage\Collector::start(__DIR__ . '/coverage.dat');
 }
+
+function id($val) {
+	return $val;
+}
+
+function run(Tester\TestCase $testCase) {
+	$testCase->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);
+}
