@@ -5,7 +5,7 @@ Kdyby/Curl [![Build Status](https://secure.travis-ci.org/Kdyby/Curl.png?branch=m
 Requirements
 ------------
 
-Kdyby/Curl requires PHP 5.3.2 or higher.
+Kdyby/Curl requires PHP 5.3.2 or higher with cUrl extension enabled.
 
 - [Nette Framework 2.0.x](https://github.com/nette/nette)
 
