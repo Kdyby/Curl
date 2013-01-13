@@ -3,6 +3,7 @@
 /**
  * Test: Kdyby\Curl\CurlWrapper parse cookies.
  *
+ * @testCase KdybyTests\Curl\CurlWrapperTest
  * @author Filip Procházka <filip@prochazka.su>
  * @package Kdyby\Curl
  */

@@ -3,6 +3,7 @@
 /**
  * Test: Kdyby\Curl\HttpCookies::compile().
  *
+ * @testCase KdybyTests\Curl\HttpCookiesTest
  * @author Filip Procházka <filip@prochazka.su>
  * @package Kdyby\Curl
  */
