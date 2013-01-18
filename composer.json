@@ -1,34 +1,34 @@
 {
-    "name":"kdyby/curl",
-    "type":"library",
-    "description":"Curl wrapper for Nette Framework",
-    "keywords":["nette", "curl", "http"],
-    "homepage":"http://kdyby.org",
-    "license":["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
-    "authors":[
-        {
-            "name":"Filip Procházka",
-            "homepage":"http://filip-prochazka.com"
-        }
-    ],
-    "support":{
-        "email":"filip@prochazka.su",
-        "issues":"https://github.com/kdyby/curl/issues"
-    },
-    "require":{
-        "ext-curl":"*",
-        "nette/nette":"*"
-    },
+	"name": "kdyby/curl",
+	"type": "library",
+	"description": "Curl wrapper for Nette Framework",
+	"keywords": ["nette", "curl", "http"],
+	"homepage": "http://kdyby.org",
+	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
+	"authors": [
+		{
+			"name": "Filip Procházka",
+			"homepage": "http://filip-prochazka.com"
+		}
+	],
+	"support": {
+		"email": "filip@prochazka.su",
+		"issues": "https://github.com/kdyby/curl/issues"
+	},
+	"require": {
+		"ext-curl": "*",
+		"nette/nette": "*"
+	},
 	"require-dev": {
 		"nette/tester": "@dev"
 	},
 	"minimum-stability": "dev",
-    "autoload":{
-        "psr-0":{
-            "Kdyby\\Curl":"src/"
-        },
-        "classmap":[
-            "src/Kdyby/Curl/exceptions.php"
-        ]
-    }
+	"autoload": {
+		"psr-0": {
+			"Kdyby\\Curl": "src/"
+		},
+		"classmap": [
+			"src/Kdyby/Curl/exceptions.php"
+		]
+	}
 }
