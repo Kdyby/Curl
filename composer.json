@@ -17,12 +17,11 @@
 	},
 	"require": {
 		"ext-curl": "*",
-		"nette/nette": "*"
+		"nette/nette": "2.0.*"
 	},
 	"require-dev": {
 		"nette/tester": "@dev"
 	},
-	"minimum-stability": "dev",
 	"autoload": {
 		"psr-0": {
 			"Kdyby\\Curl": "src/"
