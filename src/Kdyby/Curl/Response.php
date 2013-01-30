@@ -96,6 +96,18 @@ class Response extends Nette\Object
 
 
 	/**
+	 * @deprecated in favour if getResponse()
+	 * @return string
+	 */
+	public function getBody()
+	{
+		trigger_error('Method is @deprecated, use $response->getResponse()', E_USER_DEPRECATED);
+		return $this->getResponse();
+	}
+
+
+
+	/**
 	 * @return \Nette\Http\UrlScript
 	 */
 	public function getUrl()
