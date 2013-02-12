@@ -277,7 +277,7 @@ class CurlSender extends RequestOptions
 
 		// request failed
 		if (!$cUrl->response) {
-			throw new FailedRequestException($cUrl);
+			throw new FailedRequestException($cUrl, $this->queriedRequest);
 		}
 
 		// build & check response

@@ -32,20 +32,26 @@ class Panel extends Nette\Object
 			? function ($o, $c = TRUE) { return Nette\Diagnostics\Dumper::toHtml($o, array('collapse' => $c)); }
 			: callback('Nette\Diagnostics\Helpers::clickableDump');
 
-		if ($e instanceof Curl\FailedRequestException) {
-			return array(
-				'tab' => 'Curl',
-				'panel' => '<h3>Info</h3>' . $click($e->getRequest(), TRUE)
-			);
+		$panel = array();
 
-		} elseif ($e instanceof Curl\CurlException) {
+		if ($e instanceof Curl\FailedRequestException) {
+			$panel['info'] = '<h3>Info</h3>' . $click($e->getInfo(), TRUE);
+		}
+
+		if ($e instanceof Curl\CurlException) {
+			if ($e->getRequest()) {
+				$panel['request'] = '<h3>Request</h3>' . $click($e->getRequest(), TRUE);
+			}
+
+			if ($e->getResponse()) {
+				$panel['response'] = '<h3>Responses</h3>' . static::allResponses($e->getResponse());
+			}
+		}
+
+		if (!empty($panel)) {
 			return array(
 				'tab' => 'Curl',
-				'panel' => '<h3>Request</h3>' . $click($e->getRequest(), TRUE) .
-					($e->getResponse() ?
-						'<h3>Responses</h3>' . static::allResponses($e->getResponse())
-						: NULL
-					)
+				'panel' => implode($panel)
 			);
 		}
 	}
