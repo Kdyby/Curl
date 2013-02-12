@@ -9,8 +9,10 @@
  */
 
 namespace Kdyby\Curl\DI;
+
 use Kdyby;
 use Nette;
+use Nette\PhpGenerator as Code;
 
 
 
@@ -25,12 +27,18 @@ class CurlExtension extends Nette\Config\CompilerExtension
 		$builder = $this->getContainerBuilder();
 		$builder->addDefinition($this->prefix('curl'))
 			->setClass('Kdyby\Curl\CurlSender');
+	}
 
-		if (!$builder->parameters['productionMode']) {
-			$builder->addDefinition($this->prefix('curl.panel'))
-				->setFactory('Kdyby\Curl\Diagnostics\Panel::register')
-				->addTag('run', TRUE);
-		}
+
+
+	/**
+	 * @param \Nette\PhpGenerator\ClassType $class
+	 */
+	public function afterCompile(Code\ClassType $class)
+	{
+		/** @var Code\Method $init */
+		$init = $class->methods['initialize'];
+		$init->addBody('Kdyby\Curl\Diagnostics\Panel::registerBluescreen();');
 	}
 
 }

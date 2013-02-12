@@ -26,7 +26,7 @@ class Panel extends Nette\Object
 	 *
 	 * @return array
 	 */
-	public function renderException($e)
+	public static function renderException($e)
 	{
 		$click = class_exists('Nette\Diagnostics\Dumper')
 			? function ($o, $c = TRUE) { return Nette\Diagnostics\Dumper::toHtml($o, array('collapse' => $c)); }
@@ -85,11 +85,9 @@ class Panel extends Nette\Object
 	/**
 	 * @return \Kdyby\Curl\Diagnostics\Panel
 	 */
-	public static function register()
+	public static function registerBluescreen()
 	{
-		Nette\Diagnostics\Debugger::$blueScreen
-			->addPanel(array($panel = new static(), 'renderException'));
-		return $panel;
+		Nette\Diagnostics\Debugger::$blueScreen->addPanel(array(get_called_class(), 'renderException'));
 	}
 
 }
