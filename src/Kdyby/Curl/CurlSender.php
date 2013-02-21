@@ -349,8 +349,8 @@ class CurlSender extends RequestOptions
 	private function isHtmlResponse(CurlWrapper $curl, array $headers)
 	{
 		return $curl->getMethod() !== Request::HEAD
-			&& (strpos($headers['Content-Type'], 'html') !== FALSE
-				|| strpos($headers['Content-Type'], 'html') !== FALSE);
+			&& !empty($headers['Content-Type'])
+			&& stripos($headers['Content-Type'], 'html') !== FALSE;
 	}
 
 
