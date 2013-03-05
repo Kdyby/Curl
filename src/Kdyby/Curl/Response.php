@@ -155,12 +155,12 @@ class Response extends Nette\Object
 	 */
 	public static function stripHeaders(CurlWrapper $curl)
 	{
-		$curl->responseHeaders = substr($curl->response, 0, $headerSize = $curl->info['header_size']);
+		$curl->responseHeaders = Strings::substring($curl->response, 0, $headerSize = $curl->info['header_size']);
 		if (!$headers = CurlWrapper::parseHeaders($curl->responseHeaders)) {
 			throw new CurlException("Failed parsing of response headers");
 		}
 
-		$curl->response = substr($curl->response, $headerSize);
+		$curl->response = Strings::substring($curl->response, $headerSize);
 		return $headers;
 	}
 
