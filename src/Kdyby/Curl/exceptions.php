@@ -117,7 +117,7 @@ class CurlException extends \RuntimeException implements Exception
 	 */
 	public function __construct($message, Request $request = NULL, Response $response = NULL)
 	{
-		parent::__construct($message);
+		parent::__construct($message, 0);
 		$this->request = $request;
 		if ($this->response = $response) {
 			$this->code = $response->headers['Status-Code'];
