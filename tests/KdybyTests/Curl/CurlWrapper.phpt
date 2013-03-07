@@ -124,7 +124,7 @@ HEAD;
 		   'Vary' => "Accept-Encoding",
 		   "Content-Type" => "text/html; charset=utf-8",
 		   'Connection' => "close",
-		), $parsed);
+		), Curl\CurlWrapper::parseHeaders($headers));
 
 	}
 
