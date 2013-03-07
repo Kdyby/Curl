@@ -472,6 +472,10 @@ class CurlWrapper extends Nette\Object
 		# Convert headers into an associative array
 		foreach ($input as $header) {
 			if ($m = Strings::match($header, static::HEADER_REGEXP)) {
+				if (in_array($m['header'], array('Http-Version', 'Status-Code', 'Status'), TRUE)) {
+					continue;
+				}
+
 				if (empty($headers[$m['header']])) {
 					$headers[$m['header']] = $m['value'];
 

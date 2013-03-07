@@ -95,6 +95,41 @@ class CurlWrapperTest extends Tester\TestCase
 
 
 
+	public function testParseHeaders_AmbiguousStatus()
+	{
+		$headers = <<<HEAD
+HTTP/1.1 100 Continue
+
+HTTP/1.1 100 Continue
+
+HTTP/1.1 500 Internal Server Error
+Date: Thu, 07 Mar 2013 08:31:35 GMT
+Server: Apache
+X-Rack-Cache: invalidate, pass
+Content-Length: 1440
+Status: 500
+Vary: Accept-Encoding
+Content-Type: text/html; charset=utf-8
+Connection: close
+HEAD;
+
+		Tester\Assert::same(array(
+		   "Http-Version" => "1.1",
+		   "Status-Code" => "500",
+		   'Status' => "500 Internal Server Error",
+		   'Date' => "Thu, 07 Mar 2013 08:31:35 GMT",
+		   'Server' => "Apache",
+		   "X-Rack-Cache" => "invalidate, pass",
+		   "Content-Length" => "1440",
+		   'Vary' => "Accept-Encoding",
+		   "Content-Type" => "text/html; charset=utf-8",
+		   'Connection' => "close",
+		), $parsed);
+
+	}
+
+
+
 	/**
 	 * @param mixed $variable
 	 * @return string
