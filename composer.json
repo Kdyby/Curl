@@ -17,7 +17,7 @@
 	},
 	"require": {
 		"ext-curl": "*",
-		"nette/nette": "@dev"
+		"nette/nette": "~2.0"
 	},
 	"require-dev": {
 		"nette/tester": "@dev"
