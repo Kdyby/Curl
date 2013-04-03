@@ -12,7 +12,7 @@ namespace Kdyby\Curl\DI;
 
 use Kdyby;
 use Nette;
-use Nette\Utils\PhpGenerator as Code;
+use Nette\PhpGenerator as Code;
 
 
 

@@ -28,9 +28,6 @@
 		},
 		"classmap": [
 			"src/Kdyby/Curl/exceptions.php"
-		],
-		"files": [
-			"src/Nette/compatibility.php"
 		]
 	}
 }
