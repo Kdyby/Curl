@@ -12,7 +12,7 @@ namespace Kdyby\Curl\DI;
 
 use Kdyby;
 use Nette;
-use Nette\PhpGenerator as Code;
+use Nette\Utils\PhpGenerator as Code;
 
 
 
@@ -31,9 +31,6 @@ class CurlExtension extends Nette\Config\CompilerExtension
 
 
 
-	/**
-	 * @param \Nette\PhpGenerator\ClassType $class
-	 */
 	public function afterCompile(Code\ClassType $class)
 	{
 		/** @var Code\Method $init */
