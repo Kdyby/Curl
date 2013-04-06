@@ -9,6 +9,7 @@
  */
 
 namespace Kdyby\Curl;
+
 use Kdyby;
 use Nette;
 use Nette\Http\IRequest;
@@ -116,6 +117,7 @@ class Request extends RequestOptions
 
 
 	/**
+	 * @throws CurlException
 	 * @return Response
 	 */
 	public function send()
@@ -132,6 +134,7 @@ class Request extends RequestOptions
 	/**
 	 * @param array|string $query
 	 *
+	 * @throws CurlException
 	 * @return Response
 	 */
 	public function get($query = NULL)
@@ -148,6 +151,7 @@ class Request extends RequestOptions
 	 * @param array|string $post
 	 * @param array $files
 	 *
+	 * @throws CurlException
 	 * @return Response
 	 */
 	public function post($post = array(), array $files = NULL)
@@ -163,6 +167,7 @@ class Request extends RequestOptions
 	/**
 	 * @param array|string $post
 	 *
+	 * @throws CurlException
 	 * @return Response
 	 */
 	public function put($post = array())
@@ -176,6 +181,7 @@ class Request extends RequestOptions
 
 
 	/**
+	 * @throws CurlException
 	 * @return Response
 	 */
 	public function delete()
@@ -190,6 +196,7 @@ class Request extends RequestOptions
 	/**
 	 * @param array|string $post
 	 *
+	 * @throws CurlException
 	 * @return Response
 	 */
 	public function download($post = array())
