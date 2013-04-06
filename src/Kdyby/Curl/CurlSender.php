@@ -9,6 +9,7 @@
  */
 
 namespace Kdyby\Curl;
+
 use Kdyby;
 use Nette;
 use Nette\Utils\Strings;
@@ -190,7 +191,7 @@ class CurlSender extends RequestOptions
 	/**
 	 * @param Request $request
 	 *
-	 * @throws \Exception
+	 * @throws CurlException
 	 * @return Response
 	 */
 	public function send(Request $request)
