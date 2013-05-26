@@ -16,10 +16,17 @@ use Nette\Utils\PhpGenerator as Code;
 
 
 
+if (!class_exists('Nette\DI\CompilerExtension')) {
+	class_alias('Nette\Config\CompilerExtension', 'Nette\DI\CompilerExtension');
+	class_alias('Nette\Config\Configurator', 'Nette\Configurator');
+	class_alias('Nette\Config\Compiler', 'Nette\DI\Compiler');
+	class_alias('Nette\Config\Helpers', 'Nette\DI\Config\Helpers');
+}
+
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class CurlExtension extends Nette\Config\CompilerExtension
+class CurlExtension extends Nette\DI\CompilerExtension
 {
 
 	public function loadConfiguration()
