@@ -32,7 +32,7 @@ class CurlExtension extends Nette\DI\CompilerExtension
 	public function loadConfiguration()
 	{
 		$builder = $this->getContainerBuilder();
-		$builder->addDefinition($this->prefix('curl'))
+		$builder->addDefinition($this->prefix('sender'))
 			->setClass('Kdyby\Curl\CurlSender');
 	}
 
@@ -43,6 +43,18 @@ class CurlExtension extends Nette\DI\CompilerExtension
 		/** @var Code\Method $init */
 		$init = $class->methods['initialize'];
 		$init->addBody('Kdyby\Curl\Diagnostics\Panel::registerBluescreen();');
+	}
+
+
+
+	/**
+	 * @param \Nette\Configurator $configurator
+	 */
+	public static function register(Nette\Configurator $configurator)
+	{
+		$configurator->onCompile[] = function ($config, Nette\DI\Compiler $compiler) {
+			$compiler->addExtension('curl', new CurlExtension());
+		};
 	}
 
 }
