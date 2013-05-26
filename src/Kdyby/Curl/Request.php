@@ -234,7 +234,12 @@ class Request extends RequestOptions
 	 */
 	public function __call($name, $args)
 	{
-		return Nette\ObjectMixin::callProperty($this, $name, $args);
+		if (method_exists('Nette\ObjectMixin', 'callProperty')) {
+			return Nette\ObjectMixin::callProperty($this, $name, $args);
+
+		} else {
+			return Nette\ObjectMixin::call($this, $name, $args);
+		}
 	}
 
 
