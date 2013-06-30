@@ -9,9 +9,11 @@
  */
 
 namespace Kdyby\Curl\Diagnostics;
+
 use Kdyby;
 use Kdyby\Curl;
 use Nette;
+use Nette\Diagnostics\Debugger;
 
 
 
@@ -87,7 +89,14 @@ class Panel extends Nette\Object
 	 */
 	public static function registerBluescreen()
 	{
-		Nette\Diagnostics\Debugger::$blueScreen->addPanel(array(get_called_class(), 'renderException'));
+		self::getDebuggerBlueScreen()->addPanel(array(get_called_class(), 'renderException'));
+	}
+
+
+
+	private static function getDebuggerBlueScreen()
+	{
+		return method_exists('Nette\Diagnostics\Debugger', 'getBlueScreen') ? Debugger::getBlueScreen() : Debugger::$blueScreen;
 	}
 
 }
