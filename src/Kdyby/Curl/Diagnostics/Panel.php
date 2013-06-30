@@ -94,6 +94,9 @@ class Panel extends Nette\Object
 
 
 
+	/**
+	 * @return Nette\Diagnostics\BlueScreen
+	 */
 	private static function getDebuggerBlueScreen()
 	{
 		return method_exists('Nette\Diagnostics\Debugger', 'getBlueScreen') ? Debugger::getBlueScreen() : Debugger::$blueScreen;
