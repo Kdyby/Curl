@@ -23,7 +23,8 @@ define('TEMP_DIR', __DIR__ . '/../tmp/' . (isset($_SERVER['argv']) ? md5(seriali
 Tester\Helpers::purge(TEMP_DIR);
 
 
-$_SERVER = array_intersect_key($_SERVER, array_flip(array('PHP_SELF', 'SCRIPT_NAME', 'SERVER_ADDR', 'SERVER_SOFTWARE', 'HTTP_HOST', 'DOCUMENT_ROOT', 'OS', 'argc', 'argv')));
+$_SERVER = array_intersect_key($_SERVER, array_flip(array(
+	'PHP_SELF', 'SCRIPT_NAME', 'SERVER_ADDR', 'SERVER_SOFTWARE', 'HTTP_HOST', 'DOCUMENT_ROOT', 'OS', 'argc', 'argv')));
 $_SERVER['REQUEST_TIME'] = 1234567890;
 $_ENV = $_GET = $_POST = array();
 
@@ -56,33 +57,23 @@ class HttpServer extends Nette\Object
 	 */
 	private $process;
 
-	/**
-	 * @var string
-	 */
-	private $router;
-
 	private static $spec = array(
 		0 => array("pipe", "r"), // stdin is a pipe that the child will read from
 		1 => array("pipe", "w"), // stdout is a pipe that the child will write to
 		2 => array("pipe", "w"), // errors
 	);
 
-	public function __construct($router)
-	{
-		$this->router = $router;
-	}
-
 	public function __destruct()
 	{
-		$this->murder();
+		$this->slaughter();
 	}
 
-	public function start($port = NULL, $ip = '127.0.0.1')
+	public function start($router, $port = NULL, $ip = '127.0.0.1')
 	{
-		$this->murder();
+		$this->slaughter();
 
 		$port = $port ? : rand(8000, 10000);
-		$cmd = sprintf('php -S %s:%d %s', $ip, $port, escapeshellarg($this->router));
+		$cmd = sprintf('php -S %s:%d %s', $ip, $port, escapeshellarg($router));
 		if (!is_resource($this->process = proc_open($cmd, self::$spec, $this->pipes))) {
 			throw new \RuntimeException("Could not execute: `$cmd`");
 		}
@@ -92,7 +83,7 @@ class HttpServer extends Nette\Object
 		return 'http://' . $ip .':' . $port;
 	}
 
-	public function murder()
+	public function slaughter()
 	{
 		if (!is_resource($this->process)) {
 			return;

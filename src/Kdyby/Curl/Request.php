@@ -117,6 +117,22 @@ class Request extends RequestOptions
 
 
 	/**
+	 * @param array|string $post
+	 * @param array $files
+	 * @return Request
+	 */
+	public function setPost($post, $files = array())
+	{
+		$this->post = $post;
+		$this->files = $files;
+		$this->method = self::POST;
+
+		return $this;
+	}
+
+
+
+	/**
 	 * @throws CurlException
 	 * @return Response
 	 */
