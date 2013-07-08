@@ -3,6 +3,7 @@
 /**
  * Test: Kdyby\Curl\CurlWrapper parse cookies.
  *
+ * @phpversion 5.4 due to usage of php build-in webserver
  * @testCase KdybyTests\Curl\CurlWrapperTest
  * @author Filip Procházka <filip@prochazka.su>
  * @package Kdyby\Curl

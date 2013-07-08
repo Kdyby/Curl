@@ -3,6 +3,7 @@
 /**
  * Test: Kdyby\Curl\CurlSender.
  *
+ * @phpversion 5.4 due to usage of php build-in webserver
  * @testCase KdybyTests\Curl\CurlSenderTest
  * @author Filip Procházka <filip@prochazka.su>
  * @package Kdyby\Curl
