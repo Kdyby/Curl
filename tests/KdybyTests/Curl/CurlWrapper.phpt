@@ -23,62 +23,61 @@ require_once __DIR__ . '/../bootstrap.php';
 class CurlWrapperTest extends Tester\TestCase
 {
 
-	const TEST_PATH = 'http://www.kdyby.org/curl-test';
-
-
-
-	public function setUp()
-	{
-		if ('pong' !== @file_get_contents('http://www.kdyby.org/ping')) {
-			Tester\Helpers::skip("No internet connection");
-		}
-	}
-
-
-
 	public function testGet()
 	{
-		$curl = new Curl\CurlWrapper(self::TEST_PATH . '/get.php?var=foo&foo[]=lol');
+		$httpServer = new \HttpServer(__DIR__ . '/routers/get.php');
+		$url = $httpServer->start();
+
+		$curl = new Curl\CurlWrapper($url . '/?var=foo&foo[]=lol');
 
 		Tester\Assert::true($curl->execute());
-		Tester\Assert::equal($this->dumpVar(array('var' => 'foo', 'foo' => array('lol'))), $curl->response);
+		Tester\Assert::equal(print_r(array('var' => 'foo', 'foo' => array('lol')), TRUE), $curl->response);
 	}
 
 
 
 	public function testPost()
 	{
-		$curl = new Curl\CurlWrapper(self::TEST_PATH . '/post.php', Curl\Request::POST);
+		$httpServer = new \HttpServer(__DIR__ . '/routers/post.php');
+		$url = $httpServer->start();
+
+		$curl = new Curl\CurlWrapper($url, Curl\Request::POST);
 		$curl->setPost($post = array('hi' => 'hello'));
 
 		Tester\Assert::true($curl->execute());
-		Tester\Assert::equal($this->dumpVar($post) . $this->dumpVar(array()), $curl->response);
+		Tester\Assert::equal(print_r($post, TRUE) . print_r(array(), TRUE), $curl->response);
 	}
 
 
 
 	public function testPostFiles()
 	{
+		$httpServer = new \HttpServer(__DIR__ . '/routers/post.php');
+		$url = $httpServer->start();
+
 		file_put_contents($tempFile = TEMP_DIR . '/curl-test.txt', 'ping');
 
-		$curl = new Curl\CurlWrapper(self::TEST_PATH . '/post.php', Curl\Request::POST);
+		$curl = new Curl\CurlWrapper($url, Curl\Request::POST);
 		$curl->setPost($post = array('hi' => 'hello'), array('txt' => $tempFile));
 
 		Tester\Assert::true($curl->execute());
-		Tester\Assert::match($this->dumpVar($post) . $this->dumpVar(array('txt' => array(
+		Tester\Assert::match(print_r($post, TRUE) . print_r(array('txt' => array(
 			'name' => basename($tempFile),
 			'type' => '%a%',
 			'tmp_name' => '%a%',
 			'error' => '0',
 			'size' => filesize($tempFile),
-		))), $curl->response);
+		)), TRUE), $curl->response);
 	}
 
 
 
 	public function testGet_Cookies()
 	{
-		$curl = new Curl\CurlWrapper(self::TEST_PATH . '/cookies.php');
+		$httpServer = new \HttpServer(__DIR__ . '/routers/cookies.php');
+		$url = $httpServer->start();
+
+		$curl = new Curl\CurlWrapper($url);
 		$curl->setOption('header', TRUE);
 		Tester\Assert::true($curl->execute());
 
@@ -125,21 +124,6 @@ HEAD;
 		   "Content-Type" => "text/html; charset=utf-8",
 		   'Connection' => "close",
 		), Curl\CurlWrapper::parseHeaders($headers));
-
-	}
-
-
-
-	/**
-	 * @param mixed $variable
-	 * @return string
-	 */
-	private function dumpVar($variable)
-	{
-		ob_start();
-		print_r($variable);
-
-		return ob_get_clean();
 	}
 
 }
