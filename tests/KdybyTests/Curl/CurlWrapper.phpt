@@ -23,11 +23,26 @@ require_once __DIR__ . '/../bootstrap.php';
  */
 class CurlWrapperTest extends Tester\TestCase
 {
+	/**
+	 * @var \HttpServer
+	 */
+	private $httpServer;
+
+	protected function setUp()
+	{
+		$this->httpServer = new \HttpServer();
+	}
+
+	protected function tearDown()
+	{
+		$this->httpServer->slaughter();
+	}
+
+
 
 	public function testGet()
 	{
-		$httpServer = new \HttpServer(__DIR__ . '/routers/get.php');
-		$url = $httpServer->start();
+		$url = $this->httpServer->start(__DIR__ . '/routers/get.php');
 
 		$curl = new Curl\CurlWrapper($url . '/?var=foo&foo[]=lol');
 
@@ -39,8 +54,7 @@ class CurlWrapperTest extends Tester\TestCase
 
 	public function testPost()
 	{
-		$httpServer = new \HttpServer(__DIR__ . '/routers/post.php');
-		$url = $httpServer->start();
+		$url = $this->httpServer->start(__DIR__ . '/routers/post.php');
 
 		$curl = new Curl\CurlWrapper($url, Curl\Request::POST);
 		$curl->setPost($post = array('hi' => 'hello'));
@@ -53,8 +67,7 @@ class CurlWrapperTest extends Tester\TestCase
 
 	public function testPostFiles()
 	{
-		$httpServer = new \HttpServer(__DIR__ . '/routers/post.php');
-		$url = $httpServer->start();
+		$url = $this->httpServer->start(__DIR__ . '/routers/post.php');
 
 		file_put_contents($tempFile = TEMP_DIR . '/curl-test.txt', 'ping');
 
@@ -75,8 +88,7 @@ class CurlWrapperTest extends Tester\TestCase
 
 	public function testGet_Cookies()
 	{
-		$httpServer = new \HttpServer(__DIR__ . '/routers/cookies.php');
-		$url = $httpServer->start();
+		$url = $this->httpServer->start(__DIR__ . '/routers/cookies.php');
 
 		$curl = new Curl\CurlWrapper($url);
 		$curl->setOption('header', TRUE);

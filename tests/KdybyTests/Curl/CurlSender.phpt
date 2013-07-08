@@ -32,10 +32,17 @@ class CurlSenderTest extends Tester\TestCase
 	 */
 	private $sender;
 
+	/**
+	 * @var \HttpServer
+	 */
+	private $httpServer;
+
 
 
 	protected function setUp()
 	{
+		$this->httpServer = new \HttpServer();
+
 		$this->sender = new Kdyby\Curl\CurlSender();
 		$this->sender->setConnectTimeout(2);
 		$this->sender->setTimeout(5);
@@ -43,10 +50,16 @@ class CurlSenderTest extends Tester\TestCase
 
 
 
+	protected function tearDown()
+	{
+		$this->httpServer->slaughter();
+	}
+
+
+
 	public function testRequest_Get_noQuery()
 	{
-		$httpServer = new \HttpServer(__DIR__ . '/routers/get.php');
-		$url = $httpServer->start();
+		$url = $this->httpServer->start(__DIR__ . '/routers/get.php');
 
 		$response = $this->sender->send(new Request($url));
 		Assert::same("Array\n(\n)\n", $response->getResponse());
@@ -56,14 +69,65 @@ class CurlSenderTest extends Tester\TestCase
 
 	public function testRequest_Get_Query()
 	{
-		$httpServer = new \HttpServer(__DIR__ . '/routers/get.php');
-		$url = $httpServer->start();
+		$url = $this->httpServer->start(__DIR__ . '/routers/get.php');
 
-		$response = $this->sender->send(new Request($url . '?kdyby=awesome&nette[]=best'));
+		$response = $this->sender->send(new Request($url . '/?kdyby=awesome&nette[]=best'));
 		Assert::same("Array\n(
     [kdyby] => awesome
     [nette] => Array\n        (\n            [0] => best\n        )\n\n)
 ", $response->getResponse());
+	}
+
+
+
+	public function testPost()
+	{
+		$url = $this->httpServer->start(__DIR__ . '/routers/post.php');
+
+		$request = new Request($url);
+		$request->setPost(array('hi' => 'hello'));
+		$response = $this->sender->send($request);
+
+		Tester\Assert::equal(print_r($request->post, TRUE) . print_r(array(), TRUE), $response->getResponse());
+	}
+
+
+
+	public function testPostFiles()
+	{
+		$url = $this->httpServer->start(__DIR__ . '/routers/post.php');
+
+		file_put_contents($tempFile = TEMP_DIR . '/curl-test.txt', 'ping');
+
+		$request = new Request($url);
+		$request->setPost(array('hi' => 'hello'), array('txt' => $tempFile));
+		$response = $this->sender->send($request);
+
+		Tester\Assert::match(print_r($request->post, TRUE) . print_r(array('txt' => array(
+			'name' => basename($tempFile),
+			'type' => '%a%',
+			'tmp_name' => '%a%',
+			'error' => '0',
+			'size' => filesize($tempFile),
+		)), TRUE), $response->getResponse());
+	}
+
+
+
+	public function testGet_Cookies()
+	{
+		$url = $this->httpServer->start(__DIR__ . '/routers/cookies.php');
+
+		$response = $this->sender->send(new Request($url));
+
+		Tester\Assert::equal(array(
+			'kdyby' => 'is awesome',
+			'nette' => 'is awesome',
+			'array' => array(
+				'one' => 'Lister',
+				'two' => 'Rimmer'
+			),
+		), $response->cookies);
 	}
 
 }
