@@ -351,7 +351,15 @@ class CurlWrapper extends Nette\Object
 				throw new NotSupportedException("Not implemented.");
 			}
 
-			array_walk_recursive($files, function (&$item) { $item = '@' . realpath($item); });
+			array_walk_recursive($files, function (&$item) {
+				if (PHP_VERSION_ID >= 50500) {
+					$item = new \CurlFile($r = realpath($item), Nette\Utils\MimeTypeDetector::fromFile($r), basename($item));
+
+				} else {
+					$item = '@' . realpath($item);
+				}
+			});
+
 			$post = Nette\Utils\Arrays::mergeTree($post, $files);
 			$this->setHeader('Content-Type', 'multipart/form-data');
 		}
