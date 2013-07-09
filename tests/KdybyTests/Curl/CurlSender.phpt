@@ -59,20 +59,20 @@ class CurlSenderTest extends Tester\TestCase
 
 	public function testRequest_Get_noQuery()
 	{
-		$url = $this->httpServer->start(__DIR__ . '/routers/get.php');
+		$url = $this->httpServer->start(__DIR__ . '/routers/all.php');
 
 		$response = $this->sender->send(new Request($url));
-		Assert::same("Array\n(\n)\n", $response->getResponse());
+		Assert::same("GET\n", $response->getResponse());
 	}
 
 
 
 	public function testRequest_Get_Query()
 	{
-		$url = $this->httpServer->start(__DIR__ . '/routers/get.php');
+		$url = $this->httpServer->start(__DIR__ . '/routers/all.php');
 
 		$response = $this->sender->send(new Request($url . '/?kdyby=awesome&nette[]=best'));
-		Assert::same("Array\n(
+		Assert::same("GET\nArray\n(
     [kdyby] => awesome
     [nette] => Array\n        (\n            [0] => best\n        )\n\n)
 ", $response->getResponse());
@@ -82,20 +82,20 @@ class CurlSenderTest extends Tester\TestCase
 
 	public function testPost()
 	{
-		$url = $this->httpServer->start(__DIR__ . '/routers/post.php');
+		$url = $this->httpServer->start(__DIR__ . '/routers/all.php');
 
 		$request = new Request($url);
 		$request->setPost(array('hi' => 'hello'));
 		$response = $this->sender->send($request);
 
-		Tester\Assert::equal(print_r($request->post, TRUE) . print_r(array(), TRUE), $response->getResponse());
+		Tester\Assert::equal("POST\n" . print_r($request->post, TRUE), $response->getResponse());
 	}
 
 
 
 	public function testPostFiles()
 	{
-		$url = $this->httpServer->start(__DIR__ . '/routers/post.php');
+		$url = $this->httpServer->start(__DIR__ . '/routers/all.php');
 
 		file_put_contents($tempFile = TEMP_DIR . '/curl-test.txt', 'ping');
 
@@ -103,7 +103,7 @@ class CurlSenderTest extends Tester\TestCase
 		$request->setPost(array('hi' => 'hello'), array('txt' => $tempFile));
 		$response = $this->sender->send($request);
 
-		Tester\Assert::match(print_r($request->post, TRUE) . print_r(array('txt' => array(
+		Tester\Assert::match("POST\n" . print_r($request->post, TRUE) . print_r(array('txt' => array(
 			'name' => basename($tempFile),
 			'type' => '%a%',
 			'tmp_name' => '%a%',
