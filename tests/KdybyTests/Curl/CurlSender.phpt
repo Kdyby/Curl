@@ -85,8 +85,7 @@ class CurlSenderTest extends Tester\TestCase
 		$url = $this->httpServer->start(__DIR__ . '/routers/all.php');
 
 		$request = new Request($url);
-		$request->setPost(array('hi' => 'hello'));
-		$response = $this->sender->send($request);
+		$response = $request->setSender($this->sender)->post(array('hi' => 'hello'));
 
 		Tester\Assert::equal("POST\n" . print_r($request->post, TRUE), $response->getResponse());
 	}
@@ -100,8 +99,7 @@ class CurlSenderTest extends Tester\TestCase
 		file_put_contents($tempFile = TEMP_DIR . '/curl-test.txt', 'ping');
 
 		$request = new Request($url);
-		$request->setPost(array('hi' => 'hello'), array('txt' => $tempFile));
-		$response = $this->sender->send($request);
+		$response = $request->setSender($this->sender)->post(array('hi' => 'hello'), array('txt' => $tempFile));
 
 		Tester\Assert::match("POST\n" . print_r($request->post, TRUE) . print_r(array('txt' => array(
 			'name' => basename($tempFile),
