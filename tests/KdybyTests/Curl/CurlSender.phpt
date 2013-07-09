@@ -132,11 +132,13 @@ class CurlSenderTest extends Tester\TestCase
 
 	public function testDownload()
 	{
+		$sender = clone $this->sender;
+
 		$url = $this->httpServer->start(__DIR__ . '/routers/download.php');
-		$this->sender->setDownloadDir(TEMP_DIR);
+		$sender->setDownloadDir(TEMP_DIR);
 
 		$request = new Request($url);
-		$response = $request->setSender($this->sender)->download();
+		$response = $request->setSender($sender)->download();
 
 		// file was downloaded
 		Assert::true($response instanceof Kdyby\Curl\FileResponse);
