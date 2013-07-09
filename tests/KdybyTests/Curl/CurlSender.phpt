@@ -130,6 +130,29 @@ class CurlSenderTest extends Tester\TestCase
 		), $response->cookies);
 	}
 
+
+
+	public function testDownload()
+	{
+		$url = $this->httpServer->start(__DIR__ . '/routers/download.php');
+		$this->sender->setDownloadDir(TEMP_DIR);
+
+		$request = new Request($url);
+		$response = $request->setSender($this->sender)->download();
+
+		// file was downloaded
+		Assert::true($response instanceof Kdyby\Curl\FileResponse);
+		Assert::true(file_exists($response->getTemporaryFile()));
+
+		// was moved
+		$response->move(TEMP_DIR . '/downloaded-conventions.txt');
+		Assert::same(TEMP_DIR . '/downloaded-conventions.txt', $response->getTemporaryFile());
+		Assert::true(file_exists(TEMP_DIR . '/downloaded-conventions.txt'));
+
+		// headers were separated
+		Assert::same(file_get_contents(__DIR__ . '/../../conventions.txt'), $response->getContents());
+	}
+
 }
 
 \run(new CurlSenderTest());
