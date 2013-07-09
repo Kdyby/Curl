@@ -70,11 +70,14 @@ class HttpServer extends Nette\Object
 
 	public function start($router, $port = NULL, $ip = '127.0.0.1')
 	{
-		static $used;
 		$this->slaughter();
 
 		if ($port === NULL) {
-			$used = $port = ($used ? $used + 1 : max(getmypid(), 8000));
+			do {
+				$port = rand(8000, 10000);
+				if (isset($lock)) @fclose($lock);
+				$lock = fopen(TEMP_DIR . '/server-' . $port . '.lock', 'w');
+			} while (!flock($lock, LOCK_EX | LOCK_NB, $wouldBlock) || $wouldBlock);
 		}
 
 		$cmd = sprintf('php -S %s:%d %s', $ip, $port, escapeshellarg($router));
