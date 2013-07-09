@@ -210,6 +210,57 @@ class CurlSender extends RequestOptions
 
 
 	/**
+	 * Creates CurlWrapper from given Request object.
+	 *
+	 * @param Request $request
+	 * @param string $requestId
+	 * @throws DirectoryNotWritableException
+	 * @return CurlWrapper
+	 */
+	protected function initRequest(Request $request, &$requestId)
+	{
+		// combine setup
+		$request->options += $this->options;
+		$request->headers += $this->headers;
+
+		// cookies
+		if ($request->cookies) {
+			$request->headers['Cookie'] = $request->getCookies();
+		}
+
+		// wrap
+		$curl = new CurlWrapper($request->getUrl(), $request->method);
+		$curl->setOptions($request->options);
+		$curl->setHeaders($request->headers);
+		$curl->setPost($request->post, $request->files);
+
+		// fallback when safe_mode
+		if (!$this->canFollowRedirect()) {
+			$curl->setOption('followLocation', NULL);
+		}
+
+		// method & prepare download
+		if ($request->isMethod(Request::DOWNLOAD)) {
+			if (!is_dir($this->downloadDir)) {
+				throw new DirectoryNotWritableException("Please provide a writable directory for download.");
+			}
+			FileResponse::prepareDownload($curl, $this->downloadDir);
+
+		} else {
+			$curl->setOption('header', TRUE);
+		}
+
+		// logging
+		if ($this->logger) {
+			$requestId = $this->logger->request($request);
+		}
+
+		return $curl;
+	}
+
+
+
+	/**
 	 * @param Request $request
 	 * @param int $cycles
 	 *
@@ -225,70 +276,52 @@ class CurlSender extends RequestOptions
 			throw new CurlException("Redirect loop", $this->queriedRequest);
 		}
 
-		// combine setup
-		$request->options += $this->options;
-		$request->headers += $this->headers;
-
-		// cookies
-		if ($request->cookies){
-			$request->headers['Cookie'] = $request->getCookies();
-		}
-
-		// wrap
-		$cUrl = new CurlWrapper($request->getUrl(), $request->method);
-		$cUrl->setOptions($request->options);
-		$cUrl->setHeaders($request->headers);
-		$cUrl->setPost($request->post, $request->files);
-
-		// fallback when safe_mode
-		if (!$this->canFollowRedirect()) {
-			$cUrl->setOption('followLocation', NULL);
-		}
-
-		// method & prepare download
-		if ($request->isMethod(Request::DOWNLOAD)) {
-			if (!is_dir($this->downloadDir)) {
-				throw new DirectoryNotWritableException("Please provide a writable directory for download.");
-			}
-			FileResponse::prepareDownload($cUrl, $this->downloadDir);
-
-		} else {
-			$cUrl->setOption('header', TRUE);
-		}
-
-		// logging
-		if ($this->logger) {
-			$requestId = $this->logger->request($request);
-		}
+		$curl = $this->initRequest($request, $requestId);
 
 		// sending process
 		$repeat = $this->repeatOnFail;
 		do {
 			$proxies = $this->proxies;
 			do {
-				if ($cUrl->setProxy(array_shift($proxies))->execute()) {
+				if ($curl->setProxy(array_shift($proxies))->execute()) {
 					break;
 
-				} elseif (!$cUrl->isProxyFail()) {
+				} elseif (!$curl->isProxyFail()) {
 					break;
 				}
 
-			} while (!$cUrl->isOk() && $proxies);
-		} while (!$cUrl->response && $repeat-- > 0);
+			} while (!$curl->isOk() && $proxies);
+		} while (!$curl->response && $repeat-- > 0);
 
+		return $this->finishRequest($request, $curl, $requestId, $cycles);
+	}
+
+
+
+	/**
+	 * @param Request $request
+	 * @param CurlWrapper $curl
+	 * @param string $requestId
+	 * @param integer $cycles
+	 * @throws BadStatusException
+	 * @throws FailedRequestException
+	 * @return Response
+	 */
+	protected function finishRequest(Request $request, CurlWrapper $curl, $requestId, $cycles)
+	{
 		// request failed
-		if (!$cUrl->response) {
-			throw new FailedRequestException($cUrl, $this->queriedRequest);
+		if (!$curl->response) {
+			throw new FailedRequestException($curl, $this->queriedRequest);
 		}
 
 		// build & check response
-		$response = $this->buildResponse($cUrl);
+		$response = $this->buildResponse($curl);
 		if (($statusCode = $response->headers['Status-Code']) >= 400 && $statusCode < 600) {
 			throw new BadStatusException($response->headers['Status'], $request, $response);
 		}
 
 		// force redirect on Location header
-		if ($this->isForcingFollowRedirect($cUrl, $response)) {
+		if ($this->isForcingFollowRedirect($curl, $response)) {
 			$request = $this->queriedRequest->followRedirect($response);
 			$response = $this->sendRequest($request, ++$cycles)
 				->setPrevious($response); // override

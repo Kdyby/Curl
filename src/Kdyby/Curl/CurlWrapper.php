@@ -30,38 +30,65 @@ class CurlWrapper extends Nette\Object
 	const VERSION_AND_STATUS = '~^HTTP/(?P<version>\d\.\d)\s(?P<code>\d+)(\s(?P<status>.*))?~';
 	/**#@- */
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	public $error;
 
-	/** @var int */
+	/**
+	 * @var int
+	 */
 	public $errorNumber;
 
-	/** @var mixed */
+	/**
+	 * @var mixed
+	 */
 	public $info;
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	public $file;
 
-	/** @var string|boolean */
+	/**
+	 * @var string|boolean
+	 */
 	public $response;
 
-	/** @var string|array */
+	/**
+	 * @var string|array
+	 */
 	public $responseHeaders;
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	public $requestHeaders;
 
-	/** @var \Nette\Http\UrlScript */
+	/**
+	 * @var \Nette\Http\UrlScript
+	 */
 	private $url;
 
-	/** @var string */
+	/**
+	 * @var string
+	 */
 	private $method = Request::GET;
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	private $options = array();
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	private $headers = array();
+
+	/**
+	 * @var resource
+	 */
+	private $handle;
 
 
 
@@ -380,14 +407,16 @@ class CurlWrapper extends Nette\Object
 
 
 	/**
+	 * Initializes the curl request resource,
+	 * that can be either directly executed, or pooled in curl_multi
 	 *
+	 * @return resource
 	 * @throws InvalidStateException
-	 * @return string|boolean
 	 */
-	public function execute()
+	public function init()
 	{
 		$this->error = $this->errorNumber = $this->info = $this->response =
-			$this->responseHeaders = $this->requestHeaders = NULL;
+		$this->responseHeaders = $this->requestHeaders = NULL;
 
 		// method shouldn't be GET, when posting data
 		if ($this->method === Request::GET && isset($this->options['postFields'])) {
@@ -395,7 +424,7 @@ class CurlWrapper extends Nette\Object
 		}
 
 		// init
-		$curl = curl_init((string)$this->url);
+		$this->handle = curl_init((string) $this->url);
 
 		// set headers
 		if (count($this->headers) > 0) {
@@ -423,28 +452,65 @@ class CurlWrapper extends Nette\Object
 		}
 
 		// set options
-		curl_setopt($curl, CURLINFO_HEADER_OUT, TRUE);
+		curl_setopt($this->handle, CURLINFO_HEADER_OUT, TRUE);
 		foreach ($this->options as $option => $value) {
-			curl_setopt($curl, constant('CURLOPT_' . strtoupper($option)), $value);
+			curl_setopt($this->handle, constant('CURLOPT_' . strtoupper($option)), $value);
 		}
 
-		// execute
-		$this->response = curl_exec($curl);
+		return $this->handle;
+	}
+
+
+
+	/**
+	 * Executes the request
+	 *
+	 * @throws InvalidStateException
+	 * @return string|boolean
+	 */
+	public function execute()
+	{
+		return $this->finish(curl_exec($this->init()));
+	}
+
+
+
+	/**
+	 * Accepts the execution response, reads errors if any,
+	 * and saves info about the request.
+	 *
+	 * @param string|bool $response
+	 * @throws InvalidStateException
+	 * @throws InvalidArgumentException
+	 * @return bool
+	 */
+	public function finish($response)
+	{
+		if (!is_string($response) && !is_bool($response)) {
+			throw new InvalidArgumentException("Response must be either string or bool(false), " . gettype($response) . " given.");
+		}
+
+		if (!is_resource($this->handle)) {
+			throw new InvalidStateException("Request was not initialized, please call the init() method first, or pool the request in curl_multi.");
+		}
+
+		$this->response = $response;
 
 		// read errors
-		if ($this->errorNumber = curl_errno($curl)) {
-			$this->error = curl_error($curl);
+		if ($this->errorNumber = curl_errno($this->handle)) {
+			$this->error = curl_error($this->handle);
 		}
 
 		// gather info
-		$this->info = curl_getinfo($curl);
-		if (isset($this->info['request_header'])){
+		$this->info = curl_getinfo($this->handle);
+		if (isset($this->info['request_header'])) {
 			$this->requestHeaders = static::parseHeaders($this->info['request_header']);
 			unset($this->info['request_header']);
 		}
 
 		// cleanup
-		@curl_close($curl);
+		@curl_close($this->handle);
+		$this->handle = NULL;
 
 		// return execution result
 		if ($this->info['http_code'] >= 300 && $this->info['http_code'] < 600) {
