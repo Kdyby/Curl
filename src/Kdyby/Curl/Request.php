@@ -213,7 +213,7 @@ class Request extends RequestOptions
 	 * @param array|string $post
 	 *
 	 * @throws CurlException
-	 * @return Response
+	 * @return FileResponse
 	 */
 	public function download($post = array())
 	{
