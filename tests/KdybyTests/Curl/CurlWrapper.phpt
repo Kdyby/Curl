@@ -42,32 +42,32 @@ class CurlWrapperTest extends Tester\TestCase
 
 	public function testGet()
 	{
-		$url = $this->httpServer->start(__DIR__ . '/routers/get.php');
+		$url = $this->httpServer->start(__DIR__ . '/routers/all.php');
 
 		$curl = new Curl\CurlWrapper($url . '/?var=foo&foo[]=lol');
 
 		Tester\Assert::true($curl->execute());
-		Tester\Assert::equal(print_r(array('var' => 'foo', 'foo' => array('lol')), TRUE), $curl->response);
+		Tester\Assert::equal("GET\n" . print_r(array('var' => 'foo', 'foo' => array('lol')), TRUE), $curl->response);
 	}
 
 
 
 	public function testPost()
 	{
-		$url = $this->httpServer->start(__DIR__ . '/routers/post.php');
+		$url = $this->httpServer->start(__DIR__ . '/routers/all.php');
 
 		$curl = new Curl\CurlWrapper($url, Curl\Request::POST);
 		$curl->setPost($post = array('hi' => 'hello'));
 
 		Tester\Assert::true($curl->execute());
-		Tester\Assert::equal(print_r($post, TRUE) . print_r(array(), TRUE), $curl->response);
+		Tester\Assert::equal("POST\n" . print_r($post, TRUE), $curl->response);
 	}
 
 
 
 	public function testPostFiles()
 	{
-		$url = $this->httpServer->start(__DIR__ . '/routers/post.php');
+		$url = $this->httpServer->start(__DIR__ . '/routers/all.php');
 
 		file_put_contents($tempFile = TEMP_DIR . '/curl-test.txt', 'ping');
 
@@ -75,7 +75,7 @@ class CurlWrapperTest extends Tester\TestCase
 		$curl->setPost($post = array('hi' => 'hello'), array('txt' => $tempFile));
 
 		Tester\Assert::true($curl->execute());
-		Tester\Assert::match(print_r($post, TRUE) . print_r(array('txt' => array(
+		Tester\Assert::match("POST\n" . print_r($post, TRUE) . print_r(array('txt' => array(
 			'name' => basename($tempFile),
 			'type' => '%a%',
 			'tmp_name' => '%a%',
