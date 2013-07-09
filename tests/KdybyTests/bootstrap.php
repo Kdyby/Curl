@@ -70,9 +70,13 @@ class HttpServer extends Nette\Object
 
 	public function start($router, $port = NULL, $ip = '127.0.0.1')
 	{
+		static $used;
 		$this->slaughter();
 
-		$port = $port ? : rand(8000, 10000);
+		if ($port === NULL) {
+			$used = $port = ($used ? $used + 1 : max(getmypid(), 8000));
+		}
+
 		$cmd = sprintf('php -S %s:%d %s', $ip, $port, escapeshellarg($router));
 		if (!is_resource($this->process = proc_open($cmd, self::$spec, $this->pipes))) {
 			throw new \RuntimeException("Could not execute: `$cmd`");
