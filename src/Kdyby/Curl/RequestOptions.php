@@ -155,7 +155,7 @@ abstract class RequestOptions extends Nette\Object
 	public function setTrustedCertificate($cert, $verifyHost = self::VERIFYHOST_MATCH)
 	{
 		if (!in_array($verifyHost, range(0, 2))) {
-			throw new InvalidArgumentException("Verify host must be 0, 1 or 2");
+			throw InvalidArgumentException::expectedOneOf('verify host', array(self::VERIFYHOST_NO, self::VERIFYHOST_MATCH, self::VERIFYHOST_COMMON), $verifyHost);
 		}
 
 		if (!file_exists($cert)) {
@@ -191,7 +191,7 @@ abstract class RequestOptions extends Nette\Object
 	public function setTrustedCertificatesDirectory($dir, $verifyHost = 2)
 	{
 		if (!in_array($verifyHost, range(0, 2))) {
-			throw new InvalidArgumentException("Verify host must be 0, 1 or 2");
+			throw InvalidArgumentException::expectedOneOf('verify host', array(self::VERIFYHOST_NO, self::VERIFYHOST_MATCH, self::VERIFYHOST_COMMON), $verifyHost);
 		}
 
 		if (!is_dir($dir)) {

@@ -28,6 +28,62 @@ interface Exception
 class InvalidArgumentException extends \InvalidArgumentException implements Exception
 {
 
+	/**
+	 * @param string $expected
+	 * @param mixed $given
+	 * @return InvalidArgumentException
+	 */
+	public static function expected($expected, $given)
+	{
+		return new static(sprintf('Expected %s, but %s given.', $expected, self::analyzeType($given)));
+	}
+
+
+
+	/**
+	 * @param string $expected
+	 * @param array $values
+	 * @param mixed $given
+	 * @return InvalidArgumentException
+	 */
+	public static function expectedOneOf($expected, array $values, $given)
+	{
+		return new static(sprintf('Expected %s to be one of %s, but %s given.', $expected, implode(', ', $values), self::analyzeType($given)));
+	}
+
+
+
+	/**
+	 * @param string $expected
+	 * @param int $num
+	 * @return InvalidArgumentException
+	 */
+	public static function expectedArgument($expected, $num)
+	{
+		$trace = PHP_VERSION_ID >= 50400 ? debug_backtrace(NULL, 2) : debug_backtrace(NULL);
+		$args = $trace[1]['args'];
+
+		if (!array_key_exists($num - 1, $args)) {
+			return new static(sprintf('Expected %s as argument #%d, but nothing given.', $expected, $num - 1));
+		}
+
+		return new static(sprintf('Expected %s as argument #%d, but %s given.', $expected, $num, self::analyzeType($args[$num - 1])));
+	}
+
+
+
+	private static function analyzeType($variable)
+	{
+		if (is_object($variable) || is_array($variable)) {
+			return is_object($variable) ? 'instance of ' . get_class($variable) : 'array(' . count($variable) . ')';
+
+		} elseif (is_scalar($variable)) {
+			return gettype($variable) . '(' . (($l = strlen($variable)) < 10 ? $variable : $l) . ')';
+		}
+
+		return gettype($variable);
+	}
+
 }
 
 

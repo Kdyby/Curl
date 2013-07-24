@@ -190,7 +190,6 @@ class CurlSender extends RequestOptions
 
 	/**
 	 * @param Request $request
-	 *
 	 * @throws CurlException
 	 * @return Response
 	 */

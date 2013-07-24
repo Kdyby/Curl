@@ -487,7 +487,7 @@ class CurlWrapper extends Nette\Object
 	public function finish($response)
 	{
 		if (!is_string($response) && !is_bool($response)) {
-			throw new InvalidArgumentException("Response must be either string or bool(false), " . gettype($response) . " given.");
+			throw InvalidArgumentException::expected("either string or bool(false)", $response);
 		}
 
 		if (!is_resource($this->handle)) {
