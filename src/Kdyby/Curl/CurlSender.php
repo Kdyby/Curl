@@ -212,11 +212,10 @@ class CurlSender extends RequestOptions
 	 * Creates CurlWrapper from given Request object.
 	 *
 	 * @param Request $request
-	 * @param string $requestId
 	 * @throws DirectoryNotWritableException
 	 * @return CurlWrapper
 	 */
-	protected function initRequest(Request $request, &$requestId)
+	protected function initRequest(Request $request)
 	{
 		// combine setup
 		$request->options += $this->options;
@@ -251,7 +250,7 @@ class CurlSender extends RequestOptions
 
 		// logging
 		if ($this->logger) {
-			$requestId = $this->logger->request($request);
+			$this->logger->request($request);
 		}
 
 		return $curl;
@@ -275,7 +274,7 @@ class CurlSender extends RequestOptions
 			throw new CurlException("Redirect loop", $this->queriedRequest);
 		}
 
-		$curl = $this->initRequest($request, $requestId);
+		$curl = $this->initRequest($request);
 
 		// sending process
 		$repeat = $this->repeatOnFail;
@@ -292,7 +291,7 @@ class CurlSender extends RequestOptions
 			} while (!$curl->isOk() && $proxies);
 		} while (!$curl->response && $repeat-- > 0);
 
-		return $this->finishRequest($request, $curl, $requestId, $cycles);
+		return $this->finishRequest($request, $curl, $cycles);
 	}
 
 
@@ -300,14 +299,15 @@ class CurlSender extends RequestOptions
 	/**
 	 * @param Request $request
 	 * @param CurlWrapper $curl
-	 * @param string $requestId
 	 * @param integer $cycles
 	 * @throws BadStatusException
 	 * @throws FailedRequestException
 	 * @return Response
 	 */
-	protected function finishRequest(Request $request, CurlWrapper $curl, $requestId, $cycles)
+	protected function finishRequest(Request $request, CurlWrapper $curl, $cycles)
 	{
+		$this->queriedRequest = $request;
+
 		// request failed
 		if (!$curl->response) {
 			throw new FailedRequestException($curl, $this->queriedRequest);
@@ -327,8 +327,8 @@ class CurlSender extends RequestOptions
 		}
 
 		// log response
-		if ($this->logger && isset($requestId)) {
-			$this->logger->response($response, $requestId);
+		if ($this->logger) {
+			$this->logger->response($response, $request);
 		}
 
 		// return

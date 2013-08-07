@@ -9,6 +9,7 @@
  */
 
 namespace Kdyby\Curl;
+
 use Kdyby;
 use Nette;
 
@@ -22,15 +23,14 @@ interface IRequestLogger
 
 	/**
 	 * @param Request $request
-	 * @return string the id to pass to response
 	 */
 	function request(Request $request);
 
 
 	/**
 	 * @param Response $response
-	 * @param string $id
+	 * @param Request $request
 	 */
-	function response(Response $response, $id);
+	function response(Response $response, Request $request);
 
 }

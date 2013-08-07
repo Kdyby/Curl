@@ -56,7 +56,7 @@ class FileLogger extends Nette\Object implements Curl\IRequestLogger
 	 */
 	public function request(Curl\Request $request)
 	{
-		$id = md5(serialize($request));
+		$id = spl_object_hash($request);
 
 		$content = array($request->method . ' ' . $request->getUrl());
 		foreach ($request->headers as $name => $value) {
@@ -69,18 +69,18 @@ class FileLogger extends Nette\Object implements Curl\IRequestLogger
 		});
 
 		$this->write($content . "\n", $id);
-
-		return $id;
 	}
 
 
 
 	/**
 	 * @param \Kdyby\Curl\Response $response
-	 * @param string $id
+	 * @param \Kdyby\Curl\Request $request
 	 */
-	public function response(Curl\Response $response, $id)
+	public function response(Curl\Response $response, Curl\Request $request)
 	{
+		$id = spl_object_hash($request);
+
 		$content = array();
 		foreach ($response->getHeaders() as $name => $value) {
 			$content[] = "$name: $value";
