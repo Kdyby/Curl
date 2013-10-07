@@ -128,6 +128,26 @@ class Response extends Nette\Object
 
 
 	/**
+	 * @return int
+	 */
+	public function getCode()
+	{
+		return (int) $this->headers['Status-Code'];
+	}
+
+
+
+	/**
+	 * @return bool
+	 */
+	public function isOk()
+	{
+		return $this->getCode() === 200;
+	}
+
+
+
+	/**
 	 * @return array
 	 */
 	public function getCookies()
