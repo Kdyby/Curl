@@ -21,7 +21,7 @@ use Nette\Http\UrlScript as Url;
  * @author Filip Procházka <filip@prochazka.su>
  *
  * @method \Kdyby\Curl\Request setUrl(string $url)
- * @method \Kdyby\Curl\Request setMethod(string $url)
+ * @method \Kdyby\Curl\Request setMethod(string $method)
  */
 class Request extends RequestOptions
 {
