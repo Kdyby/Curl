@@ -167,7 +167,7 @@ class FailedRequestException extends CurlException
 	 */
 	public function __construct(CurlWrapper $curl, Request $request = NULL)
 	{
-		parent::__construct($curl->error, $request);
+		parent::__construct($curl->error . ' ' . $curl->getUrl()->getAuthority(), $request);
 		$this->code = $curl->errorNumber;
 		$this->info = $curl->info;
 	}
