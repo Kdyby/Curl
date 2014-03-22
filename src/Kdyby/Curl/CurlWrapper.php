@@ -380,7 +380,9 @@ class CurlWrapper extends Nette\Object
 
 			array_walk_recursive($files, function (&$item) {
 				if (PHP_VERSION_ID >= 50500) {
-					$item = new \CurlFile($r = realpath($item), Nette\Utils\MimeTypeDetector::fromFile($r), basename($item));
+					$pathname = realpath($item);
+					$type = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $pathname);
+					$item = new \CurlFile($pathname, strpos($type, '/') ? $type : 'application/octet-stream', basename($item));
 
 				} else {
 					$item = '@' . realpath($item);
