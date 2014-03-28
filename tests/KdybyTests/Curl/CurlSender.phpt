@@ -85,7 +85,7 @@ class CurlSenderTest extends Tester\TestCase
 		$url = $this->httpServer->start(__DIR__ . '/routers/all.php');
 
 		$request = new Request($url);
-		$response = $request->setSender($this->sender)->post(array('hi' => 'hello'));
+		$response = $request->setSender($this->sender)->post(array('hi' => 'hello', 'foo' => array('bar' => 'baz')));
 
 		Tester\Assert::equal("POST\n" . print_r($request->post, TRUE), $response->getResponse());
 	}

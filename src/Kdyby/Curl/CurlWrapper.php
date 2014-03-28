@@ -396,7 +396,7 @@ class CurlWrapper extends Nette\Object
 		if ($post) {
 			return $this->setOptions(array(
 				'post' => TRUE,
-				'postFields' => $post,
+				'postFields' => is_array($post) ? Helpers::flattenArray($post) : $post,
 			));
 		}
 

@@ -46,4 +46,23 @@ class Helpers extends Nette\Object
 		return $walker($array);
 	}
 
+
+
+	public static function flattenArray($array, $prefix = NULL)
+	{
+		$res = array();
+
+		foreach ($array as $key => $value) {
+			$k = (isset($prefix)) ? $prefix . "[$key]" : "$key";
+
+			if (is_array($value)) {
+				$res += self::flattenArray($value, $k);
+			} else {
+				$res[$k] = $value;
+			}
+		}
+
+		return $res;
+	}
+
 }
