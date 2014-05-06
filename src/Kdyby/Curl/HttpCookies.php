@@ -9,17 +9,23 @@
  */
 
 namespace Kdyby\Curl;
+
 use Kdyby;
 use Nette;
 use Nette\Utils\Arrays;
 use Nette\Utils\Strings;
+use Nette\Utils\ArrayHash;
 
 
+
+if (!class_exists('Nette\Utils\ArrayHash')) {
+	class_alias('Nette\ArrayHash', 'Nette\Utils\ArrayHash');
+}
 
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class HttpCookies extends Nette\ArrayHash
+class HttpCookies extends ArrayHash
 {
 	const COOKIE_DATETIME = 'D, d-M-Y H:i:s e';
 
