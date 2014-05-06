@@ -14,8 +14,13 @@ use Kdyby;
 use Nette;
 use Nette\Http\IRequest;
 use Nette\Http\UrlScript as Url;
+use Nette\Utils\ObjectMixin;
 
 
+
+if (!class_exists('Nette\Utils\ObjectMixin')) {
+	class_alias('Nette\ObjectMixin', 'Nette\Utils\ObjectMixin');
+}
 
 /**
  * @author Filip Procházka <filip@prochazka.su>
@@ -250,11 +255,11 @@ class Request extends RequestOptions
 	 */
 	public function __call($name, $args)
 	{
-		if (method_exists('Nette\ObjectMixin', 'callProperty')) {
-			return Nette\ObjectMixin::callProperty($this, $name, $args);
+		if (method_exists('Nette\Utils\ObjectMixin', 'callProperty')) {
+			return ObjectMixin::callProperty($this, $name, $args);
 
 		} else {
-			return Nette\ObjectMixin::call($this, $name, $args);
+			return ObjectMixin::call($this, $name, $args);
 		}
 	}
 
