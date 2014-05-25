@@ -9,6 +9,7 @@
  */
 
 namespace Kdyby\Curl;
+
 use DOMDocument;
 use Kdyby;
 use Nette;

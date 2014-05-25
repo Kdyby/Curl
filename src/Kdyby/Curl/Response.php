@@ -9,6 +9,7 @@
  */
 
 namespace Kdyby\Curl;
+
 use Kdyby;
 use Nette;
 use Nette\Utils\Strings;
