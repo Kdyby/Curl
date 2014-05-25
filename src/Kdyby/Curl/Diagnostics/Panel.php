@@ -13,7 +13,9 @@ namespace Kdyby\Curl\Diagnostics;
 use Kdyby;
 use Kdyby\Curl;
 use Nette;
-use Nette\Diagnostics\Debugger;
+use Tracy;
+use Tracy\Debugger;
+use Tracy\Dumper;
 
 
 
@@ -30,10 +32,7 @@ class Panel extends Nette\Object
 	 */
 	public static function renderException($e)
 	{
-		$click = class_exists('Nette\Diagnostics\Dumper')
-			? function ($o, $c = TRUE) { return Nette\Diagnostics\Dumper::toHtml($o, array('collapse' => $c)); }
-			: callback('Nette\Diagnostics\Helpers::clickableDump');
-
+		$click = function ($o, $c = TRUE) { return Dumper::toHtml($o, array('collapse' => $c)); };
 		$panel = array();
 
 		if ($e instanceof Curl\FailedRequestException) {
@@ -71,9 +70,7 @@ class Panel extends Nette\Object
 			return NULL;
 		}
 
-		$click = class_exists('Nette\Diagnostics\Dumper')
-			? function ($o, $c = TRUE) { return Nette\Diagnostics\Dumper::toHtml($o, array('collapse' => $c)); }
-			: callback('Nette\Diagnostics\Helpers::clickableDump');
+		$click = function ($o, $c = TRUE) { return Dumper::toHtml($o, array('collapse' => $c)); };
 
 		$responses = array($click($response, TRUE));
 		while ($response = $response->getPrevious()) {
@@ -95,11 +92,11 @@ class Panel extends Nette\Object
 
 
 	/**
-	 * @return Nette\Diagnostics\BlueScreen
+	 * @return Tracy\BlueScreen
 	 */
 	private static function getDebuggerBlueScreen()
 	{
-		return method_exists('Nette\Diagnostics\Debugger', 'getBlueScreen') ? Debugger::getBlueScreen() : Debugger::$blueScreen;
+		return Debugger::getBlueScreen();
 	}
 
 }

@@ -17,11 +17,15 @@
 		"issues": "https://github.com/kdyby/curl/issues"
 	},
 	"require": {
-		"nette/nette": "~2.1@dev",
+		"nette/http": "~2.2@dev",
+		"nette/utils": "~2.2@dev",
 
 		"ext-curl": "*"
 	},
 	"require-dev": {
+		"nette/nette": "~2.2@dev",
+		"nette/bootstrap": "~2.2@dev",
+
 		"nette/tester": "@dev",
 		"jakub-onderka/php-parallel-lint": "~0.6"
 	},
