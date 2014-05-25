@@ -32,10 +32,5 @@
 		"classmap": [
 			"src/Kdyby/Curl/exceptions.php"
 		]
-	},
-	"extra": {
-		"branch-alias": {
-			"dev-master": "2.0-dev"
-		}
 	}
 }
