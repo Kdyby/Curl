@@ -1,5 +1,9 @@
-Kdyby/Curl [![Build Status](https://secure.travis-ci.org/Kdyby/Curl.png?branch=master)](http://travis-ci.org/Kdyby/Curl)
-===========================
+Kdyby/Curl
+======
+
+[![Build Status](https://travis-ci.org/Kdyby/Curl.svg?branch=master)](https://travis-ci.org/Kdyby/Curl)
+[![Downloads this Month](https://img.shields.io/packagist/dm/Kdyby/Curl.svg)](https://packagist.org/packages/Kdyby/Curl)
+[![Latest stable](img.shields.io/packagist/v/Kdyby/Curl.svg)](https://packagist.org/packages/Kdyby/Curl)
 
 
 Requirements
