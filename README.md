@@ -3,7 +3,7 @@ Kdyby/Curl
 
 [![Build Status](https://travis-ci.org/Kdyby/Curl.svg?branch=master)](https://travis-ci.org/Kdyby/Curl)
 [![Downloads this Month](https://img.shields.io/packagist/dm/Kdyby/Curl.svg)](https://packagist.org/packages/Kdyby/Curl)
-[![Latest stable](img.shields.io/packagist/v/Kdyby/Curl.svg)](https://packagist.org/packages/Kdyby/Curl)
+[![Latest stable](https://img.shields.io/packagist/v/Kdyby/Curl.svg)](https://packagist.org/packages/Kdyby/Curl)
 
 
 Requirements
