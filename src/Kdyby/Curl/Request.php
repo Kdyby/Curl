@@ -36,6 +36,7 @@ class Request extends RequestOptions
 	const PUT = IRequest::PUT;
 	const HEAD = IRequest::HEAD;
 	const DELETE = IRequest::DELETE;
+	const PATCH = 'PATCH';
 	const DOWNLOAD = 'DOWNLOAD';
 	/**#@- */
 
@@ -209,6 +210,19 @@ class Request extends RequestOptions
 	{
 		$this->method = static::DELETE;
 		$this->post = $this->files = array();
+		return $this->send();
+	}
+
+
+
+	/**
+	 * @param array $post
+	 * @return Response
+	 */
+	public function patch($post = array())
+	{
+		$this->method = static::PATCH;
+		$this->post = $post;
 		return $this->send();
 	}
 
