@@ -82,7 +82,7 @@ $odpoved = $request->send();
 ```
 
 ### Proxy
-Wrapper supports proxy as well. It is possible to add as much as proxies you want. Wrapper will try all of them until the request success in required timeout.
+Wrapper supports proxy as well. It is possible to add as much as proxies you want. Wrapper will use all of them until the request don't success in required timeout.
 
 ```php
 $sender = new Kdyby\Curl\CurlSender;
