@@ -9,7 +9,7 @@
 The best way to install Kdyby/Curl is using [Composer](http://getcomposer.org/):
 
 ```sh
-$ composer require kdyby/curl:@dev</code></pre>
+$ composer require kdyby/curl
 ```
 
 ## Getting started
