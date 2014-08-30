@@ -96,3 +96,5 @@ $response = $sender->send($request);
 $request->headers['Host'] = '12.345.678.90';
 $request->headers['Some-Custom-Header'] = 'Some Custom Value';
 ```
+
+Documentation translated with ♥ by (Northys)[http://github.com/Northys]
