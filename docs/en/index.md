@@ -8,7 +8,7 @@ Kdyby/Curl is a simple Curl wrapper for sending various HTTP requests. It requir
 The best way to install Kdyby/Curl is using [Composer](http://getcomposer.org/):
 
 ```sh
-$ composer require kdyby/curl:~2.2
+$ composer require kdyby/curl:2.1.*
 ```
 
 You can optionally register the extension, which handles bluescreen rendering on CurlException.
