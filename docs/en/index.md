@@ -128,11 +128,13 @@ $curl->setFollowRedirects(FALSE);
 
 You can also easily set the browser name, and there are even some default browser identifiers.
 
-|* FireFox3 | `Mozilla/5.0 (Windows; U; Windows NT 5.1; pl; rv:1.9) Gecko/2008052906 Firefox/3.0` |
-|* GoogleBot | `Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)` |
-|* IE7 | `Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)` |
-|* Netscape | `Mozilla/4.8 [en] (Windows NT 6.0; U)` |
-|* Opera | `Opera/9.25 (Windows NT 6.0; U; en)` |
+| Shortcut | Full browser name |
+| -------- | ----------------- |
+| `FireFox3` | `Mozilla/5.0 (Windows; U; Windows NT 5.1; pl; rv:1.9) Gecko/2008052906 Firefox/3.0` |
+| `GoogleBot` | `Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)` |
+| `IE7` | `Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)` |
+| `Netscape` | `Mozilla/4.8 [en] (Windows NT 6.0; U)` |
+| `Opera` | `Opera/9.25 (Windows NT 6.0; U; en)` |
 
 ```php
 $curl->setReferer('http://google.com');
