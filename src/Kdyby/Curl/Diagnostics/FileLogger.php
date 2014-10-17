@@ -14,6 +14,7 @@ use Kdyby;
 use Kdyby\Curl;
 use Nette;
 use Nette\PhpGenerator as Code;
+use Tracy\Debugger;
 
 
 
@@ -36,7 +37,7 @@ class FileLogger extends Nette\Object implements Curl\IRequestLogger
 	 */
 	public function __construct($logDir = NULL)
 	{
-		$this->logDir = $logDir ?: Nette\Diagnostics\Debugger::$logDirectory;
+		$this->logDir = $logDir ?: Debugger::$logDirectory;
 	}
 
 
@@ -115,7 +116,7 @@ class FileLogger extends Nette\Object implements Curl\IRequestLogger
 		}
 
 		if (!@file_put_contents($file, $content, FILE_APPEND)) {
-			Nette\Diagnostics\Debugger::log("Logging to $file failed.");
+			Debugger::log("Logging to $file failed.");
 		}
 	}
 
