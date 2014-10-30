@@ -252,7 +252,9 @@ class Request extends RequestOptions
 	final public function followRedirect(Response $response)
 	{
 		$request = clone $this;
-		$request->setMethod(Request::GET);
+		if (!$request->isMethod(Request::DOWNLOAD)) {
+			$request->setMethod(Request::GET);
+		}
 		$request->post = $request->files = array();
 		$request->cookies = $response->getCookies() + $request->cookies;
 		$request->setUrl(static::fixUrl($request->getUrl(), $response->headers['Location']));
