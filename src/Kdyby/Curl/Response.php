@@ -70,6 +70,10 @@ class Response extends Nette\Object
 	 */
 	public function setPrevious(Response $previous = NULL)
 	{
+		if ($previous) {
+			$this->cookies += $previous->cookies;
+		}
+
 		$this->previous = $previous;
 		return $this;
 	}
