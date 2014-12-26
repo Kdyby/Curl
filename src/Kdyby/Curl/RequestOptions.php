@@ -123,6 +123,19 @@ abstract class RequestOptions extends Nette\Object
 
 
 	/**
+         * @param integer $version
+         * 
+         * @return RequestOptions
+         */
+        public function setSslVersion($version)
+        {
+                $this->options['sslVersion'] = (int) $version;
+                return $this;
+        }
+
+
+
+	/**
 	 * Sets if all certificates are trusted by default
 	 *
 	 * @param boolean $yes
