@@ -48,7 +48,8 @@ class FileResponse extends Response
 	public function getContentType()
 	{
 		if ($this->type === NULL) {
-			$this->type = Nette\Utils\MimeTypeDetector::fromFile($this->file);
+			$type = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $this->file);
+			$this->type = strpos($type, '/') ? $type : 'application/octet-stream';
 		}
 		return $this->type;
 	}
