@@ -456,8 +456,31 @@ class CurlWrapper extends Nette\Object
 
 		// set options
 		curl_setopt($this->handle, CURLINFO_HEADER_OUT, TRUE);
+		$interface = NULL;
+		$ipResolve = NULL;
 		foreach ($this->options as $option => $value) {
 			curl_setopt($this->handle, constant('CURLOPT_' . strtoupper($option)), $value);
+			if (strtolower($option) === 'interface') {
+				$interface = $value;
+			} elseif (strtolower($option) === 'ipresolve') {
+				$ipResolve = $value;
+			}
+		}
+
+		if ($interface !== NULL) {
+			if (filter_var($interface, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== FALSE) {
+				if ($ipResolve === NULL) {
+					curl_setopt($this->handle, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+				} elseif ($ipResolve !== CURL_IPRESOLVE_V4) {
+					throw new CurlException('Try of usage not IPv4 resolving using IPv4 address has been detected. It would not work so please change ipResolve or interface option for cURL.');
+				}
+			} elseif (filter_var($interface, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== FALSE) {
+				if ($ipResolve === NULL) {
+					curl_setopt($this->handle, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V6);
+				} elseif ($ipResolve !== CURL_IPRESOLVE_V6) {
+					throw new CurlException('Try of usage not IPv6 resolving using IPv6 address has been detected. It would not work so please change ipResolve or interface option for cURL.');
+				}
+			}
 		}
 
 		return $this->handle;
