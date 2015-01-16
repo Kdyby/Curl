@@ -36,7 +36,7 @@ class HttpCookies extends ArrayHash
 	 */
 	public function __construct($setCookies = NULL)
 	{
-		if (Nette\Utils\Validators::isList($setCookies)) {
+		if (Nette\Utils\Validators::isList($setCookies) || is_scalar($setCookies)) {
 			$this->parse(is_array($setCookies) ? $setCookies : (array)$setCookies);
 
 		} else {
