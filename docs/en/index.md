@@ -49,7 +49,7 @@ try {
         ));
 
         var_dump($response->getHeaders());
-        echo $response->getBody();
+        echo $response->getResponse();
 
 } catch (Curl\CurlException $e) {
         echo $e->getMessage();
