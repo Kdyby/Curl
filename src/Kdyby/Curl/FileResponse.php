@@ -198,7 +198,7 @@ class FileResponse extends Response
 	public static function prepareDownload(CurlWrapper $curl, $dir)
 	{
 		do {
-			$fileName = urlencode((string)$curl->getUrl()) . '.' . Strings::random() . '.tmp';
+			$fileName = md5($curl->getUrl()) . '.' . Strings::random() . '.tmp';
 		} while (is_file($dir . '/' . $fileName));
 
 		if (($fileHandle = @fopen($curl->file = $dir . '/' . $fileName, 'wb')) === FALSE) {
