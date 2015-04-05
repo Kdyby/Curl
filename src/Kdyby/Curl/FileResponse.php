@@ -198,7 +198,7 @@ class FileResponse extends Response
 	public static function prepareDownload(CurlWrapper $curl, $dir)
 	{
 		do {
-			$fileName = self::sanitizeFileName($curl->getUrl()) . '.' . Strings::random() . '.tmp';
+			$fileName = md5($curl->getUrl()) . '.' . Strings::random() . '.tmp';
 		} while (is_file($dir . '/' . $fileName));
 
 		if (($fileHandle = @fopen($curl->file = $dir . '/' . $fileName, 'wb')) === FALSE) {
@@ -212,17 +212,6 @@ class FileResponse extends Response
 			'writeHeader' => $headersHandle,
 			'binaryTransfer' => TRUE
 		));
-	}
-
-
-
-	/**
-	 * @param string $url
-	 * @return string
-	 */
-	public static function sanitizeFileName($url)
-	{
-		return sha1($url);
 	}
 
 }
