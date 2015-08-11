@@ -14,6 +14,7 @@ use Kdyby;
 use Kdyby\Curl;
 use Nette;
 use Nette\PhpGenerator as Code;
+use Nette\Utils\Callback;
 use Tracy\Debugger;
 
 
@@ -27,7 +28,7 @@ class FileLogger extends Nette\Object implements Curl\IRequestLogger
 	/** @var string */
 	private $logDir;
 
-	/** @var \Nette\Callback[] */
+	/** @var callable[] */
 	private $formatters = array();
 
 
@@ -47,7 +48,8 @@ class FileLogger extends Nette\Object implements Curl\IRequestLogger
 	 */
 	public function addFormatter($callback)
 	{
-		$this->formatters[] = callback($callback);
+		Callback::check($callback);
+		$this->formatters[] = $callback;
 	}
 
 
