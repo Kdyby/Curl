@@ -54,6 +54,18 @@ class HttpCookiesTest extends Tester\TestCase
 		), FALSE), $cookies);
 	}
 
+	public function testReadNoDecode() {
+		$cookies = new HttpCookies($this->dataCookies(), NULL, NULL);
+		$expectedCookies = HttpCookies::from(array(
+			'kdyby' => 'is+awesome',
+			'nette' => 'is+awesome',
+			'array' => array(
+				'one' => 'Lister',
+				'two' => 'Rimmer'
+			)
+		), FALSE);
+		Tester\Assert::equal(iterator_to_array($expectedCookies), iterator_to_array($cookies));
+	}
 
 
 	public function testCompile()
@@ -61,6 +73,15 @@ class HttpCookiesTest extends Tester\TestCase
 		$cookies = new HttpCookies($this->dataCookies());
 
 		$expected = 'kdyby=is+awesome; nette=is+awesome; array[one]=Lister; array[two]=Rimmer';
+		Tester\Assert::equal($expected, $cookies->compile());
+		Tester\Assert::equal($cookies->compile(), (string)$cookies);
+	}
+
+	public function testCompileNoEncode()
+	{
+		$cookies = new HttpCookies($this->dataCookies(), NULL, 'urldecode');
+
+		$expected = 'kdyby=is awesome; nette=is awesome; array[one]=Lister; array[two]=Rimmer';
 		Tester\Assert::equal($expected, $cookies->compile());
 		Tester\Assert::equal($cookies->compile(), (string)$cookies);
 	}

@@ -102,7 +102,7 @@ class CurlWrapperTest extends Tester\TestCase
 				'one' => 'Lister',
 				'two' => 'Rimmer'
 			),
-		), FALSE), $headers['Set-Cookie']);
+		), FALSE), new Curl\HttpCookies($headers['Set-Cookie']));
 	}
 
 

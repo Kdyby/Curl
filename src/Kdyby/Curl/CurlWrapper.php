@@ -588,10 +588,6 @@ class CurlWrapper extends Nette\Object
 			}
 		}
 
-		if (isset($headers['Set-Cookie'])) {
-			$headers['Set-Cookie'] = new HttpCookies(is_array($headers['Set-Cookie']) ? $headers['Set-Cookie'] : array($headers['Set-Cookie']));
-		}
-
 		return $headers;
 	}
 

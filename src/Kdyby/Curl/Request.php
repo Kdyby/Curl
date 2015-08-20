@@ -48,6 +48,9 @@ class Request extends RequestOptions
 	/** @var array name => value */
 	public $cookies = array();
 
+	public $cookiesEncodeCallback = 'urlencode';
+	public $cookiesDecodeCallback = 'urldecode';
+
 	/** @var array|string */
 	public $post = array();
 
@@ -89,7 +92,7 @@ class Request extends RequestOptions
 	 */
 	public function getCookies()
 	{
-		return new HttpCookies($this->cookies);
+		return new HttpCookies($this->cookies, $this->cookiesEncodeCallback, $this->cookiesDecodeCallback);
 	}
 
 

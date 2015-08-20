@@ -39,6 +39,8 @@ class Response extends Nette\Object
 
 	/** @var CurlWrapper */
 	protected $curl;
+	
+	public $cookiesDecodeCallback = 'urldecode';
 
 
 
@@ -52,8 +54,7 @@ class Response extends Nette\Object
 		$this->headers = $headers;
 
 		if (isset($headers['Set-Cookie'])) {
-			// Set-Cookie is parsed in CurlWrapper to object
-			$this->cookies = (array)$headers['Set-Cookie'];
+			$this->cookies = $headers['Set-Cookie'];
 		}
 
 		if (!isset($this->headers['Status-Code'])) {
@@ -157,7 +158,7 @@ class Response extends Nette\Object
 	 */
 	public function getCookies()
 	{
-		return $this->cookies;
+		return iterator_to_array(new HttpCookies($this->cookies, NULL, $this->cookiesDecodeCallback));
 	}
 
 
