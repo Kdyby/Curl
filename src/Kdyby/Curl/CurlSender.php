@@ -13,6 +13,7 @@ namespace Kdyby\Curl;
 use Kdyby;
 use Nette;
 use Nette\Utils\Strings;
+use Nette\Utils\Callback;
 
 
 
@@ -40,7 +41,7 @@ class CurlSender extends RequestOptions
 	/** @var array */
 	private $proxies = array();
 
-	/** @var \Nette\Callback */
+	/** @var callable */
 	private $confirmRedirect;
 
 	/** @var string */
@@ -112,13 +113,14 @@ class CurlSender extends RequestOptions
 	 */
 	public function setConfirmRedirect($confirmRedirect)
 	{
-		$this->confirmRedirect = callback($confirmRedirect);
+		Callback::check($confirmRedirect);
+		$this->confirmRedirect = $confirmRedirect;
 	}
 
 
 
 	/**
-	 * @return \Nette\Callback
+	 * @return callable
 	 */
 	public function getConfirmRedirect()
 	{

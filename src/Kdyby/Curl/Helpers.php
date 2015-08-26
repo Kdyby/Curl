@@ -12,6 +12,7 @@ namespace Kdyby\Curl;
 
 use Kdyby;
 use Nette;
+use Nette\Utils\Callback;
 
 
 
@@ -29,7 +30,7 @@ class Helpers extends Nette\Object
 	 */
 	public static function flatMapAssoc($array, $callback)
 	{
-		$callback = callback($callback);
+		Callback::check($callback);
 		$result = array();
 		$walker = function ($array, $keys = array()) use (&$walker, &$result, $callback) {
 			foreach ($array as $key => $value) {
