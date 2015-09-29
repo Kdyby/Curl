@@ -5,6 +5,8 @@ Kdyby/Curl
 [![Downloads this Month](https://img.shields.io/packagist/dm/kdyby/curl.svg)](https://packagist.org/packages/kdyby/curl)
 [![Latest stable](https://img.shields.io/packagist/v/kdyby/curl.svg)](https://packagist.org/packages/kdyby/curl)
 
+**This package is abandoned and no longer maintained. The author suggests using the [bitbang/http](https://packagist.org/packages/bitbang/http) package instead.**
+
 
 Requirements
 ------------
