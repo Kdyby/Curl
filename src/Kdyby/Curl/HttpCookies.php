@@ -34,10 +34,8 @@ class HttpCookies extends ArrayHash
 	/**
 	 * @param array|string $setCookies
 	 */
-	public function __construct($setCookies = NULL, $encodeCallback = 'urlencode', $decodeCallback = 'urldecode')
+	public function __construct($setCookies = NULL)
 	{
-		$this->encodeCallback = $encodeCallback;
-		$this->decodeCallback = $decodeCallback;
 		if (Nette\Utils\Validators::isList($setCookies) || is_scalar($setCookies)) {
 			$this->parse(is_array($setCookies) ? $setCookies : (array)$setCookies);
 
@@ -50,22 +48,17 @@ class HttpCookies extends ArrayHash
 
 
 
-	public function getIterator() {
-		return new \CallbackFilterIterator(parent::getIterator(), function($value, $key) {
-				return !in_array($key, array('encodeCallback', 'decodeCallback'));
-			});
-	}
-
 	/**
 	 * @return string
 	 */
 	public function compile()
 	{
 		$cookies = Helpers::flatMapAssoc($this, function ($value, $keys) {
-			$name = implode('][', $this->encodeCallback ? array_map($this->encodeCallback, $keys) : $keys);
+			$name = implode('][', $keys);
 			$name = count($keys) > 1 ? (substr_replace($name, '', strpos($name, ']'), 1) . ']') : $name;
-			return $name . '=' . ($this->encodeCallback ? call_user_func($this->encodeCallback, $value) : $value);
+			return $name . '=' . $value;
 		});
+
 		return implode('; ', $cookies);
 	}
 
@@ -87,7 +80,7 @@ class HttpCookies extends ArrayHash
 	private function parse(array $cookies)
 	{
 		foreach ($cookies as $raw) {
-			if (!$cookie = static::readCookie($raw, $this->decodeCallback)) {
+			if (!$cookie = static::readCookie($raw)) {
 				continue;
 			}
 
@@ -100,11 +93,7 @@ class HttpCookies extends ArrayHash
 
 			} else {
 				$keys = explode('[', str_replace(']', '', $name));
-				$arr =& $this->{array_shift($keys)};
-				if(is_null($arr)) {
-					$arr = array();
-				}
-				$cookieValue =& Arrays::getRef($arr, $keys);
+				$cookieValue =& Arrays::getRef($arr =& $this->{array_shift($keys)}, $keys);
 				$cookieValue = $cookie['value'];
 				unset($cookieValue);
 			}
@@ -122,7 +111,7 @@ class HttpCookies extends ArrayHash
 	 *
 	 * @return array|NULL
 	 */
-	public static function readCookie($cookie, $decodeCallback = 'urldecode')
+	public static function readCookie($cookie)
 	{
 		if (!$m = Strings::matchAll($cookie, '~(?P<name>[^;=\s]+)(?:=(?P<value>[^;]*))?~i')) {
 			return NULL;
@@ -130,8 +119,8 @@ class HttpCookies extends ArrayHash
 
 		$first = array_shift($m);
 		$cookie = array(
-			'name' => $decodeCallback ? call_user_func($decodeCallback, $first['name']) : $first['name'],
-			'value' => $decodeCallback ? call_user_func($decodeCallback, $first['value']) : $first['value'],
+			'name' => $first['name'],
+			'value' => $first['value']
 		);
 
 		foreach ($m as $found) {

@@ -45,12 +45,6 @@ class Request extends RequestOptions
 	/** @var array */
 	public $headers = array();
 
-	/** @var array name => value */
-	public $cookies = array();
-
-	public $cookiesEncodeCallback = 'urlencode';
-	public $cookiesDecodeCallback = 'urldecode';
-
 	/** @var array|string */
 	public $post = array();
 
@@ -59,8 +53,8 @@ class Request extends RequestOptions
 
 	/** @var CurlSender */
 	private $sender;
-
-
+	/** @var string */
+	private $cookieFile;
 
 	/**
 	 * @param string $url
@@ -70,9 +64,32 @@ class Request extends RequestOptions
 	{
 		$this->setUrl($url);
 		$this->post = $post;
+		$this->updateCookieFile();
 	}
 
+	public function __destruct() {
+		if(isset($this->cookieFile)) {
+			@unlink($this->cookieFile);
+		}
+	}
 
+	public function updateCookieFile() {
+		
+		$this->setCookieFile(tempnam('/tmp', 'cookie'));
+	}
+
+	public function setCookieFile($cookieFile) {
+		if(isset($this->cookieFile)) {
+			@unlink($this->cookieFile);
+		}
+		$this->cookieFile = $cookieFile;
+		$this->options['cookiejar'] = $this->cookieFile;
+		$this->options['cookiefile'] = $this->cookieFile;
+	}
+
+	public function getCookieFile() {
+		return $this->cookieFile;
+	}
 
 	/**
 	 * @return \Nette\Http\UrlScript
@@ -92,7 +109,7 @@ class Request extends RequestOptions
 	 */
 	public function getCookies()
 	{
-		return new HttpCookies($this->cookies, $this->cookiesEncodeCallback, $this->cookiesDecodeCallback);
+		return new HttpCookies($this->cookies);
 	}
 
 
@@ -255,7 +272,6 @@ class Request extends RequestOptions
 			$request->setMethod(Request::GET);
 		}
 		$request->post = $request->files = array();
-		$request->cookies = $response->getCookies() + $request->cookies;
 		$request->setUrl(static::fixUrl($request->getUrl(), $response->headers['Location']));
 		return $request;
 	}

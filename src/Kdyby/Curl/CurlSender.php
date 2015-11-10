@@ -223,11 +223,6 @@ class CurlSender extends RequestOptions
 		$request->options += $this->options;
 		$request->headers += $this->headers;
 
-		// cookies
-		if ($request->cookies) {
-			$request->headers['Cookie'] = $request->getCookies();
-		}
-
 		// wrap
 		$curl = new CurlWrapper($request->getUrl(), $request->method);
 		$curl->setOptions($request->options);
@@ -315,8 +310,7 @@ class CurlSender extends RequestOptions
 		}
 
 		// build & check response
-		$response = $this->buildResponse($curl, $request);
-		$response->cookiesDecodeCallback = $request->cookiesDecodeCallback;
+		$response = $this->buildResponse($curl);
 		if (($statusCode = $response->headers['Status-Code']) >= 400 && $statusCode < 600) {
 			throw new BadStatusException($response->headers['Status'], $request, $response);
 		}
