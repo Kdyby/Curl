@@ -316,8 +316,14 @@ class CurlSender extends RequestOptions
 			throw new FailedRequestException($curl, $this->queriedRequest);
 		}
 
-		// build & check response
 		$response = $this->buildResponse($curl);
+
+		// log response
+		if ($this->logger && isset($requestId)) {
+			$this->logger->response($response, $requestId);
+		}
+
+		// check response
 		if (($statusCode = $response->headers['Status-Code']) >= 400 && $statusCode < 600) {
 			throw new BadStatusException($response->headers['Status'], $request, $response);
 		}
@@ -327,11 +333,6 @@ class CurlSender extends RequestOptions
 			$request = $this->queriedRequest->followRedirect($response);
 			$response = $this->sendRequest($request, ++$cycles)
 				->setPrevious($response); // override
-		}
-
-		// log response
-		if ($this->logger && isset($requestId)) {
-			$this->logger->response($response, $requestId);
 		}
 
 		// return
