@@ -31,9 +31,6 @@ class Response extends Nette\Object
 	/** @var array */
 	private $headers;
 
-	/** @var array */
-	private $cookies = array();
-
 	/** @var Response */
 	private $previous;
 
@@ -51,11 +48,6 @@ class Response extends Nette\Object
 		$this->curl = $curl;
 		$this->headers = $headers;
 
-		if (isset($headers['Set-Cookie'])) {
-			// Set-Cookie is parsed in CurlWrapper to object
-			$this->cookies = (array)$headers['Set-Cookie'];
-		}
-
 		if (!isset($this->headers['Status-Code'])) {
 			$this->headers['Status-Code'] = $this->curl->info['http_code'];
 		}
@@ -70,10 +62,6 @@ class Response extends Nette\Object
 	 */
 	public function setPrevious(Response $previous = NULL)
 	{
-		if ($previous) {
-			$this->cookies += $previous->cookies;
-		}
-
 		$this->previous = $previous;
 		return $this;
 	}
@@ -149,17 +137,6 @@ class Response extends Nette\Object
 	{
 		return $this->getCode() === 200;
 	}
-
-
-
-	/**
-	 * @return array
-	 */
-	public function getCookies()
-	{
-		return $this->cookies;
-	}
-
 
 
 	/**

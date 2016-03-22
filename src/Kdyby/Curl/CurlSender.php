@@ -225,11 +225,6 @@ class CurlSender extends RequestOptions
 		$request->options += $this->options;
 		$request->headers += $this->headers;
 
-		// cookies
-		if ($request->cookies) {
-			$request->headers['Cookie'] = $request->getCookies();
-		}
-
 		// wrap
 		$curl = new CurlWrapper($request->getUrl(), $request->method);
 		$curl->setOptions($request->options);

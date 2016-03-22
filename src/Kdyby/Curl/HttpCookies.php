@@ -54,9 +54,9 @@ class HttpCookies extends ArrayHash
 	public function compile()
 	{
 		$cookies = Helpers::flatMapAssoc($this, function ($value, $keys) {
-			$name = implode('][', array_map('urlencode', $keys));
+			$name = implode('][', $keys);
 			$name = count($keys) > 1 ? (substr_replace($name, '', strpos($name, ']'), 1) . ']') : $name;
-			return $name . '=' . urlencode($value);
+			return $name . '=' . $value;
 		});
 
 		return implode('; ', $cookies);
@@ -119,8 +119,8 @@ class HttpCookies extends ArrayHash
 
 		$first = array_shift($m);
 		$cookie = array(
-			'name' => urldecode($first['name']),
-			'value' => urldecode($first['value'])
+			'name' => $first['name'],
+			'value' => $first['value']
 		);
 
 		foreach ($m as $found) {
