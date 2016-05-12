@@ -199,13 +199,16 @@ class Request extends RequestOptions
 
 
 	/**
+	 * @param array|string $query
+	 * 
 	 * @throws CurlException
 	 * @return Response
 	 */
-	public function delete()
+	public function delete($query = NULL)
 	{
 		$this->method = static::DELETE;
 		$this->post = $this->files = array();
+		$this->getUrl()->appendQuery($query);
 		return $this->send();
 	}
 
