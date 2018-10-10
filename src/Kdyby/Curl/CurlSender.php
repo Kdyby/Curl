@@ -465,7 +465,7 @@ class CurlSender extends RequestOptions
 	public static function isInSafeMode()
 	{
 		$status = strtolower(ini_get('safe_mode'));
-		return $status === 'on' || $status === 'true' || $status === 'yes' || $status % 256;
+		return $status === 'on' || $status === 'true' || $status === 'yes' || (is_numeric($status) ? $status % 256 : false);
 	}
 
 }
